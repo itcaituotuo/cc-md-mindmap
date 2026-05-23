@@ -1,0 +1,16 @@
+# Runtime artifacts
+*.log
+*.pid
+ai-requests.log
+
+# Local secrets and environment
+.env
+.env.*
+
+# Dependencies
+node_modules/
+
+# Editor and OS metadata
+.idea/
+.vscode/
+.DS_Store
