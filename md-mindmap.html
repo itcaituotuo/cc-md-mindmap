@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MD MindMap — 测试用例审核工具</title>
+<title>MD MindMap</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23B8541F'/><text x='16' y='22' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-weight='700' font-size='17' fill='%23FFFFFF'>CC</text></svg>">
 <script>
   try {
     if (localStorage.getItem('md-mindmap-theme') === 'dark') {
@@ -229,15 +230,30 @@
   header {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 14px 22px;
-    background: var(--chrome-bg);
-    border-bottom: 1px solid var(--chrome-border);
-    flex-shrink: 0;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
-    position: relative;
+    pointer-events: none;
   }
   header::after { display: none; }
+  .header-pill {
+    background: var(--chrome-bg);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
+    height: 44px;
+    display: flex;
+    align-items: center;
+  }
 
   .logo {
     font-family: 'Fraunces', serif;
@@ -275,12 +291,43 @@
     font-size: 8px;
   }
 
+  .header-left {
+    display: flex;
+    align-items: center;
+    background: var(--chrome-bg);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
+    height: 44px;
+    padding: 0 4px;
+    pointer-events: auto;
+  }
   .file-zone {
     display: flex;
     align-items: center;
     gap: 4px;
-    flex: 1;
-    min-width: 0;
+    background: var(--chrome-bg);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
+    height: 44px;
+    padding: 0 8px;
+    pointer-events: auto;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    background: var(--chrome-bg);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
+    height: 44px;
+    padding: 0 12px;
+    pointer-events: auto;
   }
 
   .btn {
@@ -308,12 +355,12 @@
     min-height: 30px;
     padding: 0 10px;
     border-radius: var(--chrome-radius);
-    border: 1px solid var(--chrome-border);
-    background: var(--chrome-fill);
+    border: none;
+    background: transparent;
     font-size: 11.5px;
     font-weight: 600;
     box-shadow: none;
-    transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+    transition: background 0.15s, color 0.15s, transform 0.05s;
   }
   header .btn .icon-svg {
     width: 13px;
@@ -321,23 +368,17 @@
     vertical-align: -2px;
     margin-right: 0;
   }
-  .sidebar-menu-toggle .icon-svg {
-    width: 14px;
-    height: 14px;
-  }
   .btn:hover { background: var(--chrome-fill-hover); border-color: var(--chrome-border-hover); }
   header .btn:hover {
     background: var(--chrome-fill-hover);
-    border-color: var(--chrome-border-hover);
   }
   .btn:active { transform: translateY(0.5px); }
   .btn:disabled {
     cursor: not-allowed;
   }
   header .btn:disabled {
-    color: var(--ink-muted);
-    border-color: var(--control-border-disabled);
-    background: var(--soft-fill-disabled);
+    color: var(--ink-faint);
+    background: transparent;
     opacity: 1;
   }
   .btn.primary {
@@ -348,14 +389,12 @@
   }
   header .btn.primary {
     padding: 0 10px;
-    background: var(--chrome-fill);
-    border-color: var(--chrome-border);
+    background: transparent;
     color: var(--ink);
   }
   .btn.primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
   header .btn.primary:hover {
     background: var(--chrome-fill-hover);
-    border-color: var(--chrome-border-hover);
     color: var(--ink);
   }
   .btn.save {
@@ -364,15 +403,13 @@
     color: var(--accent);
   }
   header .btn.save {
-    background: var(--chrome-fill);
-    border-color: var(--chrome-border);
+    background: transparent;
     color: var(--ink);
   }
   .btn.save:hover { background: var(--accent); color: var(--paper); }
   header .btn.save:hover {
     background: var(--chrome-fill-hover);
     color: var(--ink);
-    border-color: var(--chrome-border-hover);
   }
   .file-name {
     font-family: 'JetBrains Mono', monospace;
@@ -381,7 +418,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    max-width: 320px;
+    max-width: 240px;
     letter-spacing: 0.01em;
   }
   .save-status {
@@ -404,7 +441,6 @@
     display: flex;
     gap: 8px;
     font-size: 11px;
-    margin-left: auto;
     font-family: 'JetBrains Mono', monospace;
     letter-spacing: 0.02em;
     padding: 3px 8px;
@@ -583,7 +619,7 @@
   /* ── REVIEW SUMMARY PANEL ── */
   .review-summary {
     position: fixed;
-    top: 60px;
+    top: 62px;
     right: 18px;
     width: 360px;
     max-height: calc(100vh - 80px);
@@ -697,7 +733,6 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-left: auto;
     padding: 4px 8px;
     border: 1px solid var(--chrome-border);
     border-radius: var(--chrome-radius);
@@ -713,10 +748,11 @@
     color: var(--ink);
     font-family: 'Instrument Sans', sans-serif;
     font-size: 12px;
-    width: 120px;
+    width: 72px;
     padding: 2px 0;
+    transition: width 0.18s;
   }
-  .filter-input:focus { width: 180px; transition: width 0.18s; }
+  .filter-input:focus { width: 180px; }
   .filter-input::placeholder { color: var(--ink-muted); }
   .filter-input::-webkit-search-cancel-button { display: none; }
   .filter-chips { display: flex; gap: 3px; }
@@ -819,24 +855,27 @@
     display: flex;
     flex: 1;
     overflow: hidden;
+    position: relative;
   }
 
   /* ── SIDEBAR ── */
   #sidebar {
-    width: 360px;
-    min-width: 180px;
+    position: absolute;
+    left: 8px;
+    top: 60px;
+    height: calc(100% - 68px);
+    width: 280px;
+    min-width: 160px;
     max-width: 600px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.78), rgba(255,255,255,0.58)), var(--chrome-sidebar-bg);
-    border-right: 1px solid var(--chrome-border);
-    box-shadow: none;
-    /* visible right edge is provided by .sidebar-resize::after so we get a
-       single line that doubles as the resize affordance on hover. */
+    background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.72)), var(--chrome-sidebar-bg);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(34,28,19,0.10), 0 1px 4px rgba(34,28,19,0.06);
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
     transition: width 0.22s cubic-bezier(.4,0,.2,1);
     overflow: hidden;
-    position: relative; /* for the absolutely-positioned resize handle */
+    z-index: 50;
   }
   /* Disable the collapse transition while the user drags the resize handle —
      it would lag behind the pointer otherwise. */
@@ -902,8 +941,8 @@
   }
 
   .sidebar-header {
-    min-height: 58px;
-    padding: 12px 14px 12px 18px;
+    min-height: 46px;
+    padding: 6px 10px 6px 8px;
     font-family: 'Instrument Sans', system-ui, sans-serif;
     font-weight: 760;
     font-style: normal;
@@ -913,7 +952,7 @@
     border-bottom: 1px solid var(--chrome-border);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 6px;
     white-space: nowrap;
     flex-shrink: 0;
     letter-spacing: 0;
@@ -921,6 +960,26 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
+  #sidebar-toggle-btn {
+    position: fixed;
+    left: 8px;
+    top: 8px;
+    z-index: 100;
+    width: 44px;
+    height: 44px;
+    background: var(--chrome-bg);
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  #sidebar-toggle-btn:hover { background: var(--chrome-fill-hover); color: var(--ink); }
+  #sidebar-toggle-btn .icon-svg { width: 15px; height: 15px; }
   .sidebar-header::before {
     display: none;
   }
@@ -1026,12 +1085,12 @@
     box-shadow: inset 0 0 0 1px rgba(107, 114, 128, 0.12);
   }
   .tree-item.active {
-    color: #7C3AED;
-    background: rgba(124, 58, 237, 0.10);
+    color: #0284C7;
+    background: rgba(14, 165, 233, 0.10);
     font-weight: 700;
     box-shadow: none;
   }
-  .tree-item.active::before { background: #8B5CF6; }
+  .tree-item.active::before { background: #0EA5E9; }
   .tree-item .name {
     font-family: 'Instrument Sans', system-ui, sans-serif;
     font-size: 13px;
@@ -1096,6 +1155,12 @@
   }
   .tree-children.hidden { display: none; }
 
+  :root[data-theme="dark"] .header-left,
+  :root[data-theme="dark"] .file-zone,
+  :root[data-theme="dark"] .header-right,
+  :root[data-theme="dark"] #sidebar-toggle-btn {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.28), 0 1px 2px rgba(0,0,0,0.18);
+  }
   :root[data-theme="dark"] #sidebar {
     background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.015)), var(--chrome-sidebar-bg);
   }
@@ -1107,8 +1172,8 @@
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
   }
   :root[data-theme="dark"] .tree-item.active {
-    color: #C4B5FD;
-    background: rgba(139, 92, 246, 0.18);
+    color: #7DD3FC;
+    background: rgba(14, 165, 233, 0.18);
   }
   :root[data-theme="dark"] .tree-children {
     border-left-color: rgba(203, 213, 225, 0.14);
@@ -1280,6 +1345,20 @@
   }
   .node-text a:hover { text-decoration-color: var(--accent); }
   .mm-node.root .node-text a { color: var(--strong-fg); }
+  .node-text .node-blockquote {
+    padding: 2px 0 2px 10px;
+    margin: 2px 0;
+    border-left: 3px solid var(--rule-strong);
+    color: var(--ink-muted);
+    background: var(--surface2);
+    border-radius: 0 6px 6px 0;
+  }
+  .node-text .node-blockquote + .node-blockquote { margin-top: 4px; }
+  .mm-node.root .node-text .node-blockquote {
+    border-left-color: var(--strong-fg-divider);
+    background: var(--strong-fg-soft-fill);
+    color: var(--strong-fg-muted);
+  }
 
   .mm-node.is-table {
     max-width: 860px;
@@ -1686,8 +1765,7 @@
     --editor-line-height: 22px;
     width: 520px;
     margin-right: -520px;
-    background: var(--surface);
-    border-left: 1px solid var(--rule);
+    background: transparent;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -1695,16 +1773,23 @@
     min-height: 0;
     overflow: hidden;
     position: relative;
+    padding-top: 60px;
   }
+  #editor-panel > .panel-header,
+  #editor-panel > .editor-body {
+    background: var(--surface);
+  }
+  #editor-panel > .panel-header { border-top: 1px solid var(--rule); border-left: 1px solid var(--rule); }
+  #editor-panel > .editor-body { border-left: 1px solid var(--rule); }
   #editor-panel.open { margin-right: 0; }
   /* noinspection CssUnusedSymbol */
   #editor-panel.resizing { transition: none; }
   .editor-resize {
     position: absolute;
-    top: 0;
+    top: 60px;
     left: 0;
     width: 8px;
-    height: 100%;
+    height: calc(100% - 60px);
     cursor: col-resize;
     z-index: 30;
     background: transparent;
@@ -2183,7 +2268,7 @@
   .ai-chat {
     position: absolute;
     right: 20px;
-    top: 12px;
+    top: 68px;
     bottom: 68px;
     z-index: 18;
     width: min(420px, calc(100vw - 48px));
@@ -2920,7 +3005,7 @@
   .tree-item .icon-svg { width: 13px; height: 13px; color: rgba(75, 85, 99, 0.70); }
   .tree-item .tree-action-btn .icon-svg { color: currentColor; }
   .tree-folder .icon-svg { color: rgba(31, 41, 55, 0.88); }
-  .tree-item.active .icon-svg { color: #8B5CF6; }
+  .tree-item.active .icon-svg { color: #0EA5E9; }
   .node-status-badge {
     width: 18px;
     height: 18px;
@@ -3183,10 +3268,7 @@
 </div>
 
 <header>
-  <div class="file-zone">
-    <button class="btn sidebar-menu-toggle" id="sidebar-menu-toggle" onclick="toggleSidebar()" title="收起侧栏" aria-label="收起侧栏">
-      <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5L5.5 7 9 10.5"/></svg>
-    </button>
+  <div class="header-center file-zone">
     <div class="overflow-menu upload-menu" id="upload-menu">
       <button class="btn primary" id="upload-btn" onclick="toggleUploadMenu(event)" title="添加 Markdown 文件或文件夹" aria-label="添加 Markdown 文件或文件夹" aria-haspopup="menu" aria-expanded="false">
         <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11.5V4M4 7l3-3 3 3M3 2.5h8"/></svg>
@@ -3251,10 +3333,7 @@
       <span class="auth-username"></span>
       <button class="auth-logout-btn" onclick="authLogout()" title="退出登录">退出</button>
     </div>
-    <span class="file-name" id="current-filename">未打开文件</span>
-    <span class="save-status" id="save-status"></span>
-  </div>
-  <div class="filter-bar" id="filter-bar" style="display:none" title="搜索节点（关键词大小写不敏感）">
+    <div class="filter-bar" id="filter-bar" style="display:none" title="搜索节点（关键词大小写不敏感）">
     <svg class="filter-icon icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3.5"/><path d="M8.6 8.6L11.5 11.5"/></svg>
     <input type="search" id="filter-input" class="filter-input" aria-label="搜索节点" placeholder="搜索节点…" autocomplete="off" spellcheck="false"
       oninput="onFilterInput(this.value)"
@@ -3281,16 +3360,25 @@
       <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7s2.2-3.5 5-3.5S12 7 12 7s-2.2 3.5-5 3.5S2 7 2 7z"/><circle cx="7" cy="7" r="1.3"/></svg>
     </button>
     <button class="filter-clear" id="filter-clear" onclick="clearFilter()" title="清除筛选（Esc）" style="display:none">×</button>
+    </div>
   </div>
-  <div class="stats" id="stats" style="display:none" title="完成 / 问题 / 待处理">
-    <div class="stat" title="完成"><div class="dot dot-pass"></div><span id="cnt-pass">0</span></div>
-    <div class="stat" title="问题"><div class="dot dot-fail"></div><span id="cnt-fail">0</span></div>
-    <div class="stat" title="待处理"><div class="dot dot-pending"></div><span id="cnt-pending">0</span></div>
+  <div class="header-right">
+    <span class="file-name" id="current-filename">未打开文件</span>
+    <span class="save-status" id="save-status"></span>
+    <div class="stats" id="stats" style="display:none" title="完成 / 问题 / 待处理">
+      <div class="stat" title="完成"><div class="dot dot-pass"></div><span id="cnt-pass">0</span></div>
+      <div class="stat" title="问题"><div class="dot dot-fail"></div><span id="cnt-fail">0</span></div>
+      <div class="stat" title="待处理"><div class="dot dot-pending"></div><span id="cnt-pending">0</span></div>
+    </div>
+    <button class="btn" onclick="toggleEditor()" id="editor-toggle" title="打开源码面板" aria-label="打开源码面板" style="display:none">
+      <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4L2 7l3 3M9 4l3 3-3 3"/></svg>
+    </button>
   </div>
-  <button class="btn" onclick="toggleEditor()" id="editor-toggle" title="打开源码面板" aria-label="打开源码面板" style="display:none">
-    <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4L2 7l3 3M9 4l3 3-3 3"/></svg>
-  </button>
 </header>
+
+<button id="sidebar-toggle-btn" onclick="toggleSidebar()" title="收起侧栏" aria-label="收起侧栏">
+  <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2" width="11" height="10" rx="1.5"/><line x1="5.5" y1="2" x2="5.5" y2="12"/></svg>
+</button>
 
 <main>
   <!-- sidebar -->
@@ -3327,7 +3415,7 @@
     </div>
     <div id="empty-state">
       <div class="big-icon">Aa</div>
-      <p>打开 Markdown 文件，开始审阅你的测试用例。</p>
+      <p>打开 Markdown 文件，开始浏览与编辑。</p>
       <p>多级标题 · 节点编辑 · 状态标注 · 撤销重做</p>
     </div>
     <div class="ai-chat" id="ai-chat">
@@ -3529,6 +3617,9 @@ const HANDLE_DB_VERSION = 1;
 const HANDLE_STORE_NAME = 'handles';
 const DEFAULT_FILE_NAME = 'example-test-cases.md';
 const TREE_FILE_RENDER_BATCH = 500;
+const TREE_EXPAND_KEY = 'md-mindmap-tree-expanded';
+const SIDEBAR_COLLAPSED_KEY = 'md-mindmap-sidebar-collapsed';
+const EDITOR_OPEN_KEY = 'md-mindmap-editor-open';
 const NODE_DRAG_PREVIEW_OFFSET_X = 36;
 const NODE_DRAG_PREVIEW_OFFSET_Y = 22;
 const NODE_DRAG_AUTOPAN_EDGE = 60;
@@ -5071,7 +5162,7 @@ function persistBrowserProject() {
   for (const path of Object.keys(state.files)) {
     const f = state.files[path];
     const shouldStoreContent = isFileLoaded(f) && (!f.handle || f.dirty);
-    const shouldStoreEntry = shouldStoreContent || f.handle || canResolveFileFromFolder(path) || Number.isFinite(f.lastSeenMtime) || f.dirty || f.view || f.diskPath;
+    const shouldStoreEntry = shouldStoreContent || f.handle || canResolveFileFromFolder(path) || Number.isFinite(f.lastSeenMtime) || f.dirty || f.view || f.diskPath || Number.isFinite(f.editorScroll);
     if (!shouldStoreEntry) continue;
     files[path] = {};
     if (shouldStoreContent) files[path].content = f.content || '';
@@ -5081,6 +5172,7 @@ function persistBrowserProject() {
     if (f.view && Number.isFinite(f.view.scale)) {
       files[path].view = { scale: f.view.scale, offsetX: f.view.offsetX, offsetY: f.view.offsetY };
     }
+    if (Number.isFinite(f.editorScroll)) files[path].editorScroll = f.editorScroll;
   }
   const data = {
     version: 1,
@@ -5114,6 +5206,7 @@ function restoreBrowserProject() {
     const lastSeenMtime = Number(file && file.lastSeenMtime);
     const hasContent = !!file && Object.prototype.hasOwnProperty.call(file, 'content');
     const savedView = file && file.view;
+    const savedEditorScroll = Number(file && file.editorScroll);
     state.files[cleanPath] = {
       content: hasContent ? String(file && file.content != null ? file.content : '') : '',
       loaded: hasContent,
@@ -5128,6 +5221,7 @@ function restoreBrowserProject() {
       view: (savedView && Number.isFinite(savedView.scale))
         ? { scale: savedView.scale, offsetX: savedView.offsetX, offsetY: savedView.offsetY }
         : null,
+      editorScroll: Number.isFinite(savedEditorScroll) ? savedEditorScroll : null,
     };
     rememberParentFolders(cleanPath);
   }
@@ -5343,6 +5437,17 @@ async function walkDroppedEntry(entry, prefix, out) {
 }
 
 // ── File-tree rendering (folder-aware) ──
+function getTreeFolderStates() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(TREE_EXPAND_KEY) || '{}');
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+    return {};
+  } catch { return {}; }
+}
+function saveTreeFolderStates(states) {
+  try { localStorage.setItem(TREE_EXPAND_KEY, JSON.stringify(states)); } catch {}
+}
+
 function buildTreeData() {
   const root = { folders: {}, files: [], count: 0 };
   for (const folderPath of state.folders) {
@@ -5405,12 +5510,15 @@ function renderFileStatusBadges(counts) {
 function renderTreeNode(node, container, depth, options = {}) {
   const folderNames = Object.keys(node.folders).sort();
   const fragment = document.createDocumentFragment();
+  const folderStates = options._folderStates || (options._folderStates = getTreeFolderStates());
   for (const name of folderNames) {
     const folder = node.folders[name];
     const folderPath = joinProjectPath(node.path || '', name);
     const row = document.createElement('div');
     const hasActive = !!(state.currentFile && (state.currentFile === folderPath || state.currentFile.startsWith(folderPath + '/')));
-    row.className = 'tree-item tree-folder' + (hasActive ? '' : ' collapsed');
+    const savedState = folderStates[folderPath]; // true=expanded, false=collapsed, undefined=no explicit choice
+    const startExpanded = savedState !== undefined ? savedState : (hasActive || !!options.expandAll);
+    row.className = 'tree-item tree-folder' + (startExpanded ? '' : ' collapsed');
     row.style.paddingLeft = '12px';
     row.innerHTML = `
       <span class="chevron">${ICONS.chevron}</span>${ICONS.folder}<span class="name">${escHtml(name)}${folder.count ? ` (${folder.count})` : ''}</span>
@@ -5421,20 +5529,23 @@ function renderTreeNode(node, container, depth, options = {}) {
         <button class="tree-action-btn danger" title="删除文件夹" onclick="deleteFolder('${escJs(folderPath)}', event)">${ICONS.trash}</button>
       </span>`;
     const childWrap = document.createElement('div');
-    childWrap.className = 'tree-children' + (hasActive ? '' : ' hidden');
+    childWrap.className = 'tree-children' + (startExpanded ? '' : ' hidden');
     childWrap.dataset.rendered = '0';
     row.onclick = () => {
       if (childWrap.dataset.rendered !== '1') {
-        renderTreeNode(folder, childWrap, depth + 1);
+        renderTreeNode(folder, childWrap, depth + 1, options);
         childWrap.dataset.rendered = '1';
       }
-      row.classList.toggle('collapsed');
+      const nowCollapsed = row.classList.toggle('collapsed');
       childWrap.classList.toggle('hidden');
+      const states = getTreeFolderStates();
+      states[folderPath] = !nowCollapsed;
+      saveTreeFolderStates(states);
     };
     fragment.appendChild(row);
     fragment.appendChild(childWrap);
     folder.path = folderPath;
-    if (hasActive || options.expandAll) {
+    if (startExpanded) {
       renderTreeNode(folder, childWrap, depth + 1, options);
       childWrap.dataset.rendered = '1';
     }
@@ -5779,10 +5890,17 @@ async function openFile(name) {
       offsetX: state.offsetX,
       offsetY: state.offsetY,
     };
+    const leavingEditor = document.getElementById('raw-editor');
+    if (leavingEditor) state.files[state.currentFile].editorScroll = leavingEditor.scrollTop;
   }
 
   const f = state.files[name];
   if (!f) return;
+  // Capture target editor scroll IMMEDIATELY — any syncRawEditorScroll() call
+  // below (e.g. the `if (!isFileLoaded(f))` reset block) would otherwise wipe
+  // f.editorScroll to 0 before we get a chance to use it.
+  const targetEditorScroll = Number.isFinite(f.editorScroll) ? f.editorScroll : 0;
+  state._restoringEditorScroll = true;
   const token = ++state.fileOpenToken;
   state.currentFile = name;
   persistBrowserProject();
@@ -5823,9 +5941,23 @@ async function openFile(name) {
   if (!loaded) return;
   persistBrowserProject();
   const savedView = state.zoomLocked ? null : f.view;
-  document.getElementById('raw-editor').value = f.content;
+  const editorEl = document.getElementById('raw-editor');
+  editorEl.value = f.content;
   updateRawEditorLineNumbers();
+  if (targetEditorScroll > 0) editorEl.scrollTop = targetEditorScroll;
   syncRawEditorScroll();
+  if (targetEditorScroll > 0) {
+    requestAnimationFrame(() => {
+      if (editorEl.scrollTop !== targetEditorScroll) editorEl.scrollTop = targetEditorScroll;
+    });
+    setTimeout(() => {
+      if (editorEl.scrollTop !== targetEditorScroll) editorEl.scrollTop = targetEditorScroll;
+      state._restoringEditorScroll = false;
+      f.editorScroll = editorEl.scrollTop;
+    }, 80);
+  } else {
+    state._restoringEditorScroll = false;
+  }
   updateMarkdownPreview();
 
   // Parse + render. If we have a remembered viewport for this file, restore
@@ -6566,7 +6698,7 @@ function renderMindmap(opts = {}) {
       ? `<div class="mermaid-block" data-mermaid-pending="1"><pre class="mermaid-source" hidden>${escHtml(node.text || '')}</pre><div class="mermaid-placeholder">Mermaid 渲染中…</div></div>`
       : node.isCode
         ? escHtml(node.text || '')
-        : (node.isTable ? renderNodeTable(node) : renderInlineMd(node.text));
+        : (node.isTable ? renderNodeTable(node) : renderNodeRichText(node.text));
     const langBadge = node.isCode && node.lang
       ? `<span class="code-lang">${escHtml(node.lang)}</span>`
       : '';
@@ -6834,7 +6966,7 @@ function onNodeTextBlur(id, el) {
       el.innerHTML = `<div class="mermaid-block" data-mermaid-pending="1"><pre class="mermaid-source" hidden>${escHtml(node.text || '')}</pre><div class="mermaid-placeholder">Mermaid 渲染中…</div></div>`;
       renderMermaidBlocks(el);
     } else {
-      el.innerHTML = node.isCode ? escHtml(node.text) : (node.isTable ? renderNodeTable(node) : renderInlineMd(node.text));
+      el.innerHTML = node.isCode ? escHtml(node.text) : (node.isTable ? renderNodeTable(node) : renderNodeRichText(node.text));
     }
   }
   el.setAttribute('contenteditable', 'false');
@@ -7823,6 +7955,7 @@ function toggleEditor() {
   if (!state.editorOpen) closeEditorHelp();
   updateEditorPanelLayout();
   syncCanvasAfterEditorLayout(260, previousCanvasWidth);
+  try { localStorage.setItem(EDITOR_OPEN_KEY, state.editorOpen ? '1' : '0'); } catch {}
 }
 
 function getRawEditorCurrentLine(el) {
@@ -8683,6 +8816,9 @@ function syncRawEditorScroll() {
   if (state.editorMode === 'split' && _scrollSyncSource !== 'preview') {
     syncPreviewFromEditor();
   }
+  if (!state._restoringEditorScroll && state.currentFile && state.files[state.currentFile]) {
+    state.files[state.currentFile].editorScroll = editor.scrollTop;
+  }
 }
 
 // Locked while one pane drives the other, so the resulting scroll event
@@ -9217,6 +9353,8 @@ wrap.addEventListener('mousedown', e => {
   if (active && active.classList && active.classList.contains('node-text') && active.getAttribute('contenteditable') === 'true') {
     active.blur();
   }
+  const filterInput = document.getElementById('filter-input');
+  if (filterInput && document.activeElement === filterInput) filterInput.blur();
   e.preventDefault(); // stop browser from selecting text while panning
   selectNode(null);
   // clear any existing text selection from previous interactions
@@ -9306,6 +9444,40 @@ function escJs(str) {
 //   `code`, **bold**, *italic*, ~~strike~~, [text](url)
 // Behavior on edit: onNodeTextFocus swaps the rendered HTML back to raw
 // markdown so the user re-edits the source, and onNodeTextBlur re-renders.
+function renderNodeRichText(text) {
+  if (text == null) return '';
+  const str = String(text);
+  if (!/^\s*>\s?/m.test(str)) return renderInlineMd(str);
+  // Walk lines; group consecutive `>`-prefixed runs into <blockquote>, render
+  // everything else with the normal inline renderer (separated by <br>).
+  const lines = str.split('\n');
+  const out = [];
+  let buf = [];
+  const flushQuote = () => {
+    if (!buf.length) return;
+    out.push(`<blockquote class="node-blockquote">${renderInlineMd(buf.join('\n'))}</blockquote>`);
+    buf = [];
+  };
+  let plain = [];
+  const flushPlain = () => {
+    if (!plain.length) return;
+    out.push(renderInlineMd(plain.join('\n')));
+    plain = [];
+  };
+  for (const line of lines) {
+    if (/^\s*>\s?/.test(line)) {
+      flushPlain();
+      buf.push(line.replace(/^\s*>\s?/, ''));
+    } else {
+      flushQuote();
+      plain.push(line);
+    }
+  }
+  flushQuote();
+  flushPlain();
+  return out.join('');
+}
+
 function renderInlineMd(text) {
   if (text == null) return '';
   // Phase 1: pull `code` spans out first so their contents don't get
@@ -9963,14 +10135,11 @@ flowchart LR
 // ══════════════════════════════════════════════
 function updateSidebarToggleButton() {
   const sb = document.getElementById('sidebar');
-  const btn = document.getElementById('sidebar-menu-toggle');
+  const btn = document.getElementById('sidebar-toggle-btn');
   if (!sb || !btn) return;
   const collapsed = sb.classList.contains('collapsed');
   btn.title = collapsed ? '展开侧栏' : '收起侧栏';
   btn.setAttribute('aria-label', btn.title);
-  btn.innerHTML = collapsed
-    ? '<svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3.5L8.5 7 5 10.5"/></svg>'
-    : '<svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3.5L5.5 7 9 10.5"/></svg>';
 }
 
 function toggleSidebar() {
@@ -9987,6 +10156,7 @@ function toggleSidebar() {
     sb.style.width = '';
     sb.classList.add('collapsed');
   }
+  try { localStorage.setItem(SIDEBAR_COLLAPSED_KEY, sb.classList.contains('collapsed') ? '1' : '0'); } catch {}
   updateSidebarToggleButton();
   // Intentionally NOT calling fitAll — keep current viewport.
 }
@@ -10053,6 +10223,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   const rawEditor = document.getElementById('raw-editor');
   if (rawEditor) rawEditor.setAttribute('wrap', 'off');
 
+  // Restore sidebar collapsed state
+  try {
+    if (localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === '1') {
+      const sb = document.getElementById('sidebar');
+      if (sb) sb.classList.add('collapsed');
+    }
+  } catch {}
+  updateSidebarToggleButton();
+
   try {
     const savedMode = localStorage.getItem(EDITOR_MODE_KEY);
     if (['source', 'preview', 'split'].includes(savedMode)) state.editorMode = savedMode;
@@ -10073,10 +10252,31 @@ window.addEventListener('DOMContentLoaded', async () => {
     state.currentFile = DEFAULT_FILE_NAME;
     persistBrowserProject();
   }
+  // Pre-restore editor panel open state BEFORE opening the file. Doing this
+  // afterward via toggleEditor() would shift the canvas by `delta` to
+  // compensate for the panel taking 520px — but the saved viewport in
+  // f.view was captured while the panel was already open, so the shift
+  // double-applies and pushes content off-screen to the left.
+  let editorWasOpen = false;
+  try { editorWasOpen = localStorage.getItem(EDITOR_OPEN_KEY) === '1'; } catch {}
+  if (editorWasOpen) {
+    state.editorOpen = true;
+    document.getElementById('editor-panel').classList.add('open');
+    updateEditorPanelLayout();
+  }
   rebuildTree();
   const fileToOpen = state.currentFile || Object.keys(state.files).sort()[0] || null;
   if (fileToOpen) await openFile(fileToOpen);
   else clearCurrentFileView();
+  // After openFile has set the toggle button's display, sync its icon/title to the open state
+  if (editorWasOpen) {
+    const toggle = document.getElementById('editor-toggle');
+    if (toggle) {
+      toggle.innerHTML = ICONS.close;
+      toggle.title = '关闭源码面板';
+      toggle.setAttribute('aria-label', '关闭源码面板');
+    }
+  }
   startFilePolling();
 });
 
