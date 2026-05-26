@@ -1354,6 +1354,18 @@
     border-radius: 0 6px 6px 0;
   }
   .node-text .node-blockquote + .node-blockquote { margin-top: 4px; }
+  .node-text img {
+    display: block;
+    max-width: 100%;
+    max-height: 240px;
+    width: auto;
+    height: auto;
+    border-radius: 4px;
+    margin: 6px 0 2px;
+    object-fit: contain;
+    cursor: zoom-in;
+    user-select: none;
+  }
   .mm-node.root .node-text .node-blockquote {
     border-left-color: var(--strong-fg-divider);
     background: var(--strong-fg-soft-fill);
@@ -2122,6 +2134,14 @@
     text-align: left;
     background: var(--surface2);
   }
+  .editor-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    margin: 4px 0;
+  }
+
   .editor-preview .task-box {
     display: inline-flex;
     align-items: center;
@@ -3095,6 +3115,114 @@
   }
   .confirm-btn.ok:hover { background: var(--accent-deep); }
 
+  /* ── Image lightbox ──────────────────────────────────────────────────── */
+  #img-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(17,24,39,0.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    overflow: hidden;
+  }
+  #img-lightbox.open { display: flex; }
+  #img-lightbox-wrap {
+    transform-origin: center center;
+    will-change: transform;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    animation: lightbox-in 0.18s ease;
+  }
+  #img-lightbox-wrap.grabbing { cursor: grabbing; }
+  #img-lightbox img {
+    display: block;
+    max-width: min(92vw, 1200px);
+    max-height: 88vh;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+  }
+  #img-lightbox-close {
+    position: fixed;
+    top: 18px;
+    right: 20px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+    z-index: 1;
+  }
+  #img-lightbox-toolbar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(17,24,39,0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 24px;
+    padding: 4px 8px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1;
+    white-space: nowrap;
+  }
+  .lb-tool-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.85);
+    font-size: 18px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    flex-shrink: 0;
+  }
+  .lb-tool-btn:hover { background: rgba(255,255,255,0.18); color: #fff; }
+  #img-lightbox-scale {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    min-width: 42px;
+    text-align: center;
+    user-select: none;
+  }
+  .lb-toolbar-sep {
+    width: 1px;
+    height: 16px;
+    background: rgba(255,255,255,0.18);
+    margin: 0 2px;
+    flex-shrink: 0;
+  }
+  #img-lightbox-close:hover { background: rgba(255,255,255,0.24); }
+  @keyframes lightbox-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
   /* ── Auth overlay ─────────────────────────────────────────────────────── */
   #auth-overlay {
     position: fixed;
@@ -3240,6 +3368,27 @@
       <button class="confirm-btn cancel" id="confirm-cancel">取消</button>
       <button class="confirm-btn ok" id="confirm-ok">确定</button>
     </div>
+  </div>
+</div>
+
+<div id="img-lightbox" role="dialog" aria-modal="true" aria-label="图片预览" onclick="_lbBgClick(event)">
+  <div id="img-lightbox-wrap"
+    onmousedown="_lbMouseDown(event)"
+    ondblclick="_lbReset()"
+    ontouchstart="_lbTouchStart(event)"
+    ontouchmove="_lbTouchMove(event)"
+    ontouchend="_lbTouchEnd(event)">
+    <img id="img-lightbox-img" src="" alt="">
+  </div>
+  <button id="img-lightbox-close" aria-label="关闭" onclick="closeLightbox()">&#x2715;</button>
+  <div id="img-lightbox-toolbar">
+    <button class="lb-tool-btn" aria-label="缩小" onclick="_lbZoomBtn(1/1.4)">&#x2212;</button>
+    <span id="img-lightbox-scale">100%</span>
+    <button class="lb-tool-btn" aria-label="放大" onclick="_lbZoomBtn(1.4)">&#x2b;</button>
+    <div class="lb-toolbar-sep"></div>
+    <button class="lb-tool-btn" aria-label="还原" onclick="_lbReset()" title="双击图片还原">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5a5.5 5.5 0 1 0 1.1-3.3"/><path d="M2 3v4h4"/></svg>
+    </button>
   </div>
 </div>
 
@@ -3964,6 +4113,112 @@ function normalizeAiHistoryMessage(message) {
     tools,
   };
 }
+
+const _lb = { scale: 1, tx: 0, ty: 0, dragging: false, startX: 0, startY: 0, didDrag: false, pinchDist: null };
+
+function openLightbox(src, alt) {
+  const img = document.getElementById('img-lightbox-img');
+  img.src = src; img.alt = alt || '';
+  _lb.scale = 1; _lb.tx = 0; _lb.ty = 0; _lb.didDrag = false;
+  _lbApply(false);
+  document.getElementById('img-lightbox').classList.add('open');
+  document.addEventListener('keydown', _lbKey);
+  document.getElementById('img-lightbox').addEventListener('wheel', _lbWheel, { passive: false });
+}
+function closeLightbox() {
+  document.getElementById('img-lightbox').classList.remove('open');
+  document.getElementById('img-lightbox-img').src = '';
+  document.removeEventListener('keydown', _lbKey);
+  document.getElementById('img-lightbox').removeEventListener('wheel', _lbWheel);
+  document.removeEventListener('mousemove', _lbMouseMove);
+  document.removeEventListener('mouseup', _lbMouseUp);
+}
+function _lbKey(e) { if (e.key === 'Escape') closeLightbox(); }
+function _lbApply(animate) {
+  const wrap = document.getElementById('img-lightbox-wrap');
+  if (!wrap) return;
+  wrap.style.transition = animate ? 'transform 0.2s ease' : 'none';
+  wrap.style.transform = `translate(${_lb.tx}px,${_lb.ty}px) scale(${_lb.scale})`;
+  const label = document.getElementById('img-lightbox-scale');
+  if (label) label.textContent = Math.round(_lb.scale * 100) + '%';
+}
+function _lbZoomBtn(factor) {
+  const s = Math.min(10, Math.max(0.1, _lb.scale * factor));
+  const f = s / _lb.scale;
+  _lb.tx *= f; _lb.ty *= f;
+  _lb.scale = s;
+  _lbApply(true);
+}
+function _lbRel(clientX, clientY) {
+  const r = document.getElementById('img-lightbox').getBoundingClientRect();
+  return [clientX - r.left - r.width / 2, clientY - r.top - r.height / 2];
+}
+function _lbZoomAt(factor, rx, ry) {
+  const s = Math.min(10, Math.max(0.1, _lb.scale * factor));
+  const f = s / _lb.scale;
+  _lb.tx = rx * (1 - f) + _lb.tx * f;
+  _lb.ty = ry * (1 - f) + _lb.ty * f;
+  _lb.scale = s;
+  _lbApply(false);
+}
+function _lbWheel(e) {
+  e.preventDefault();
+  const [rx, ry] = _lbRel(e.clientX, e.clientY);
+  _lbZoomAt(e.deltaY < 0 ? 1.12 : 1 / 1.12, rx, ry);
+}
+function _lbMouseDown(e) {
+  if (e.button !== 0) return;
+  e.stopPropagation();
+  _lb.dragging = true; _lb.didDrag = false;
+  _lb.startX = e.clientX - _lb.tx;
+  _lb.startY = e.clientY - _lb.ty;
+  document.getElementById('img-lightbox-wrap').classList.add('grabbing');
+  document.addEventListener('mousemove', _lbMouseMove);
+  document.addEventListener('mouseup', _lbMouseUp);
+}
+function _lbMouseMove(e) {
+  if (!_lb.dragging) return;
+  const nx = e.clientX - _lb.startX, ny = e.clientY - _lb.startY;
+  if (Math.abs(nx - _lb.tx) > 2 || Math.abs(ny - _lb.ty) > 2) _lb.didDrag = true;
+  _lb.tx = nx; _lb.ty = ny; _lbApply(false);
+}
+function _lbMouseUp() {
+  _lb.dragging = false;
+  document.getElementById('img-lightbox-wrap')?.classList.remove('grabbing');
+  document.removeEventListener('mousemove', _lbMouseMove);
+  document.removeEventListener('mouseup', _lbMouseUp);
+}
+function _lbBgClick(e) {
+  if (e.target === document.getElementById('img-lightbox') && !_lb.didDrag) closeLightbox();
+}
+function _lbReset() { _lb.scale = 1; _lb.tx = 0; _lb.ty = 0; _lbApply(true); }
+function _lbTouchStart(e) {
+  if (e.touches.length === 2) {
+    e.preventDefault();
+    _lb.pinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    _lb.dragging = false;
+  } else if (e.touches.length === 1) {
+    _lb.dragging = true; _lb.didDrag = false;
+    _lb.startX = e.touches[0].clientX - _lb.tx;
+    _lb.startY = e.touches[0].clientY - _lb.ty;
+  }
+}
+function _lbTouchMove(e) {
+  if (e.touches.length === 2 && _lb.pinchDist !== null) {
+    e.preventDefault();
+    const d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+    const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+    const [rx, ry] = _lbRel(mx, my);
+    _lbZoomAt(d / _lb.pinchDist, rx, ry);
+    _lb.pinchDist = d;
+  } else if (e.touches.length === 1 && _lb.dragging) {
+    _lb.tx = e.touches[0].clientX - _lb.startX;
+    _lb.ty = e.touches[0].clientY - _lb.startY;
+    _lb.didDrag = true; _lbApply(false);
+  }
+}
+function _lbTouchEnd() { _lb.pinchDist = null; _lb.dragging = false; }
 
 function showConfirm(message) {
   return new Promise(resolve => {
@@ -6470,11 +6725,20 @@ function parseMarkdown(md) {
       continue;
     }
 
-    // ── Blank / horizontal rule — close any open paragraph ────────
+    // ── Blank line — close any open paragraph ────────────────────
     const trimmed = line.trim();
-    if (!trimmed || /^(?:-{3,}|_{3,}|\*{3,})$/.test(trimmed)) {
+    if (!trimmed) {
       flushPara();
       activeTable = null;
+      continue;
+    }
+
+    // ── Horizontal rule (`---` / `___` / `***`) ───────────────────
+    if (/^(?:-{3,}|_{3,}|\*{3,})$/.test(trimmed)) {
+      flushPara();
+      activeTable = null;
+      const hrNode = { id: nextId(), level: 0, text: trimmed, status: null, children: [], lineIndex: i, isHr: true };
+      attachLeaf(hrNode);
       continue;
     }
 
@@ -6756,6 +7020,13 @@ function renderMindmap(opts = {}) {
     applyFilterClasses();
     if (typeof opts.onSettle === 'function') opts.onSettle();
   });
+
+  // Images load async — re-measure once each finishes so node heights settle.
+  mm.querySelectorAll('.node-text img').forEach(img => {
+    if (img.complete) return;
+    img.addEventListener('load', () => { let s = 3; while (s-- > 0 && measureAndRelayout()) {} }, { once: true });
+    img.addEventListener('error', () => { img.style.display = 'none'; }, { once: true });
+  });
 }
 
 function fitAll(allNodes) {
@@ -6976,6 +7247,9 @@ function onNodeTextBlur(id, el) {
       renderMermaidBlocks(el);
     } else {
       el.innerHTML = node.isCode ? escHtml(node.text) : (node.isTable ? renderNodeTable(node) : renderNodeRichText(node.text));
+      el.querySelectorAll('img').forEach(img => {
+        if (!img.complete) img.addEventListener('load', () => { let s = 3; while (s-- > 0 && measureAndRelayout()) {} }, { once: true });
+      });
     }
   }
   el.setAttribute('contenteditable', 'false');
@@ -7324,6 +7598,31 @@ function addChildNode(id) {
   focusNodeText(newNode.id);
 }
 
+function addSiblingNode(id) {
+  if (!requireEdit()) return;
+  const node = findNodeById(id);
+  if (!node || node.isRoot) return;
+  const info = findParentList(id);
+  if (!info) return;
+  pushHistory();
+  const newNode = {
+    id: nextId(),
+    level: node.level,
+    text: '新节点',
+    status: null,
+    children: [],
+    isBullet: node.isBullet,
+  };
+  const idx = info.list.findIndex(n => n.id === id);
+  info.list.splice(idx + 1, 0, newNode);
+  state.selectedNodeId = newNode.id;
+  syncToMarkdown();
+  layoutTree(state.nodes);
+  renderMindmap();
+  updateStats();
+  focusNodeText(newNode.id);
+}
+
 async function deleteNode(id) {
   if (!requireEdit()) return;
   const node = findNodeById(id);
@@ -7497,6 +7796,13 @@ function emitNodesInto(ctx, nodes, bulletDepth) {
       for (const line of codeLines) appendMd(ctx, indent + line + '\n');
       appendMd(ctx, indent + '```\n\n');
       if (node.children.length) emitNodesInto(ctx, node.children, bulletDepth + 1);
+      continue;
+    }
+
+    if (node.isHr) {
+      appendMd(ctx, '\n');
+      node.lineIndex = ctx.line;
+      appendMd(ctx, (node.text || '---') + '\n\n');
       continue;
     }
 
@@ -7981,7 +8287,7 @@ function setRawEditorCurrentLine(line) {
   if (active) active.classList.add('current');
 }
 
-function setPreviewCurrentLine(line) {
+function setPreviewCurrentLine(line, { scroll = false } = {}) {
   const preview = document.getElementById('editor-preview');
   if (!preview) return;
   preview.querySelectorAll('.preview-block.current').forEach(el => el.classList.remove('current'));
@@ -7993,7 +8299,17 @@ function setPreviewCurrentLine(line) {
     active = block;
   }
   if (!active) active = blocks[0] || null;
-  if (active) active.classList.add('current');
+  if (!active) return;
+  active.classList.add('current');
+  if (scroll) {
+    const top = active.offsetTop;
+    const bottom = top + active.offsetHeight;
+    const viewTop = preview.scrollTop;
+    const viewBottom = viewTop + preview.clientHeight;
+    if (top < viewTop || bottom > viewBottom) {
+      preview.scrollTop = Math.max(0, top - preview.clientHeight * 0.25);
+    }
+  }
 }
 
 // Scroll the raw-editor textarea so that the markdown line corresponding to the
@@ -8024,7 +8340,7 @@ function scrollRawEditorToNode(node) {
   syncRawEditorScroll();
 
   setRawEditorCurrentLine(lineIdx);
-  setPreviewCurrentLine(lineIdx);
+  setPreviewCurrentLine(lineIdx, { scroll: true });
 }
 
 function findBestNodeForLine(line) {
@@ -8364,77 +8680,156 @@ function exportCurrentMarkdown() {
   URL.revokeObjectURL(url);
 }
 
+function _pngRoundRect(ctx, x, y, w, h, r) {
+  const tl = Array.isArray(r) ? r[0] : r, tr = Array.isArray(r) ? r[1] : r;
+  const br = Array.isArray(r) ? r[2] : r, bl = Array.isArray(r) ? r[3] : r;
+  ctx.beginPath();
+  ctx.moveTo(x + tl, y);
+  ctx.lineTo(x + w - tr, y);
+  ctx.arcTo(x + w, y, x + w, y + tr, tr);
+  ctx.lineTo(x + w, y + h - br);
+  ctx.arcTo(x + w, y + h, x + w - br, y + h, br);
+  ctx.lineTo(x + bl, y + h);
+  ctx.arcTo(x, y + h, x, y + h - bl, bl);
+  ctx.lineTo(x, y + tl);
+  ctx.arcTo(x, y, x + tl, y, tl);
+  ctx.closePath();
+}
+
+function _pngDrawText(ctx, text, x, y, maxW, maxH, lineH) {
+  const plain = (text || '').replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1')
+    .replace(/`([^`]+)`/g, '$1').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/^#+\s+/gm, '');
+  let curY = y;
+  const emit = (s) => { ctx.fillText(s, x, curY); curY += lineH; };
+  const fits = () => curY - y + lineH <= maxH;
+  // Character-by-character wrap — handles CJK, emoji, and Latin equally
+  const wrapLine = (line) => {
+    if (!line) return [''];
+    const out = [];
+    let cur = '';
+    for (const ch of [...line]) {
+      const test = cur + ch;
+      if (ctx.measureText(test).width > maxW && cur) { out.push(cur); cur = ch; }
+      else cur = test;
+    }
+    if (cur) out.push(cur);
+    return out;
+  };
+  for (const line of plain.split('\n')) {
+    for (const seg of wrapLine(line)) {
+      if (!fits()) { emit('…'); return; }
+      emit(seg);
+    }
+  }
+}
+
 async function exportMindmapPng() {
-  const mm = document.getElementById('mindmap');
-  const connectorSvg = document.getElementById('connector-svg');
-  if (!mm || !mm.children.length) { alert('当前没有可导出的导图'); return; }
   const allNodes = flattenVisible(state.nodes);
   if (!allNodes.length) { alert('当前没有可导出的导图'); return; }
+
+  const PAD = 48, SCALE = 2, R = 3;
   const minX = Math.min(...allNodes.map(n => n.x));
   const minY = Math.min(...allNodes.map(n => n.y));
   const maxX = Math.max(...allNodes.map(n => n.x + (n.w || NODE_W)));
   const maxY = Math.max(...allNodes.map(n => n.y + (n.h || NODE_H)));
-  const PAD = 40;
   const W = Math.ceil(maxX - minX + PAD * 2);
   const H = Math.ceil(maxY - minY + PAD * 2);
+  const OX = -minX + PAD, OY = -minY + PAD;
 
-  // Collect the page's CSS so cloned nodes still render their look inside the
-  // SVG foreignObject. The single inline <style> at the top covers all theme
-  // tokens + node styling.
-  const styleNode = document.querySelector('style');
-  // Strip @import rules — cross-origin font URLs cause SVG-to-canvas rendering to fail
-  const cssText = styleNode ? styleNode.textContent.replace(/@import\s+url\([^)]*\)[^;]*;/g, '') : '';
-  const bg = getComputedStyle(document.body).getPropertyValue('--canvas-bg').trim()
-    || getComputedStyle(document.body).getPropertyValue('--paper').trim()
-    || '#ffffff';
+  const cv = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const colors = {
+    bg:        cv('--canvas-bg') || cv('--paper') || '#ffffff',
+    nodeBg:    cv('--surface')   || '#ffffff',
+    nodeText:  cv('--ink')       || '#111827',
+    border:    cv('--rule-strong') || 'rgba(17,24,39,0.20)',
+    rootBg:    cv('--strong-bg') || '#221C13',
+    rootText:  cv('--strong-fg') || '#F4EEE2',
+    accent:    cv('--accent')    || '#B8541F',
+    accent2:   cv('--accent2')   || '#5C4528',
+    conn:      '#6B7280',
+    pass:      cv('--pass')      || '#4F6E3F',
+    fail:      cv('--fail')      || '#B23A2C',
+    pending:   cv('--pending')   || '#B68A2C',
+  };
 
-  // Clone the mindmap layer, strip the live transform so positions are local
-  const mmClone = mm.cloneNode(true);
-  mmClone.style.transform = 'none';
-  mmClone.style.willChange = 'auto';
-  // remove drop indicator / filter classes that wouldn't make sense in static export
-  mmClone.querySelectorAll('.action-btn, .collapse-toggle').forEach(el => el.remove());
-  mmClone.querySelectorAll('.mm-filter-dim').forEach(el => el.classList.remove('mm-filter-dim'));
-
-  const svgInner = connectorSvg.innerHTML;
-  const offsetX = -minX + PAD;
-  const offsetY = -minY + PAD;
-  const themeAttr = document.documentElement.getAttribute('data-theme') || '';
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
-  <foreignObject x="0" y="0" width="${W}" height="${H}">
-    <div xmlns="http://www.w3.org/1999/xhtml" data-theme="${themeAttr}" style="width:${W}px;height:${H}px;background:${bg};position:relative;overflow:hidden;font-family:'Instrument Sans','Helvetica Neue',sans-serif;">
-      <style>${cssText}</style>
-      <svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;left:0;top:0;width:${W}px;height:${H}px;pointer-events:none;overflow:visible;" viewBox="${-offsetX} ${-offsetY} ${W} ${H}">${svgInner}</svg>
-      <div style="position:absolute;left:${offsetX}px;top:${offsetY}px;">${mmClone.outerHTML}</div>
-    </div>
-  </foreignObject>
-</svg>`;
-
-  const blob = new Blob([xml], { type: 'image/svg+xml;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const img = new Image();
-  img.crossOrigin = 'anonymous';
-  await new Promise((resolve, reject) => {
-    img.onload = resolve;
-    img.onerror = () => reject(new Error('SVG 渲染失败 — 可能含跨域字体或资源'));
-    img.src = url;
-  }).catch(err => {
-    alert('导出失败: ' + err.message);
-    URL.revokeObjectURL(url);
-    throw err;
-  });
-
-  const SCALE = 2;
   const canvas = document.createElement('canvas');
   canvas.width = W * SCALE;
   canvas.height = H * SCALE;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.scale(SCALE, SCALE);
-  ctx.drawImage(img, 0, 0);
-  URL.revokeObjectURL(url);
+
+  ctx.fillStyle = colors.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Connectors
+  ctx.lineCap = 'square';
+  ctx.lineJoin = 'miter';
+  for (const node of allNodes) {
+    if (node.collapsed) continue;
+    for (const child of (node.children || [])) {
+      if (child._filterHidden) continue;
+      const x1 = node.x + (node.w || NODE_W), y1 = node.y + (node.h || NODE_H) / 2;
+      const x2 = child.x,                      y2 = child.y + (child.h || NODE_H) / 2;
+      const sx = x1 + (node.isRoot || node.level <= 2 ? 3 : 0);
+      const ex = x2 - (child.isRoot || child.level === 2 ? 3 : -4);
+      const mx = sx + Math.max(24, Math.min(80, (ex - sx) * 0.42));
+      ctx.strokeStyle = colors.conn;
+      ctx.lineWidth = node.isRoot ? 3 : 1.5;
+      ctx.beginPath();
+      ctx.moveTo(OX + sx, OY + y1); ctx.lineTo(OX + mx, OY + y1);
+      ctx.lineTo(OX + mx, OY + y2); ctx.lineTo(OX + ex, OY + y2);
+      ctx.stroke();
+    }
+  }
+
+  // Nodes
+  for (const node of allNodes) {
+    const nx = OX + node.x, ny = OY + node.y;
+    const nw = node.w || NODE_W,  nh = node.h || NODE_H;
+    const status = node.status;
+
+    // Fill
+    ctx.fillStyle = node.isRoot ? colors.rootBg : colors.nodeBg;
+    _pngRoundRect(ctx, nx, ny, nw, nh, R);
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = node.isRoot ? colors.rootBg : colors.border;
+    ctx.lineWidth = 1;
+    _pngRoundRect(ctx, nx, ny, nw, nh, R);
+    ctx.stroke();
+
+    // Left accent / status rail
+    if (!node.isRoot) {
+      const lc = status === 'pass' ? colors.pass
+               : status === 'fail' ? colors.fail
+               : status === 'pending' ? colors.pending
+               : node.level === 1 ? colors.accent
+               : node.level === 2 ? colors.accent2 : null;
+      if (lc) {
+        ctx.save();
+        _pngRoundRect(ctx, nx, ny, nw, nh, R);
+        ctx.clip();
+        ctx.fillStyle = lc;
+        ctx.fillRect(nx, ny, status ? 3 : 2, nh);
+        ctx.restore();
+      }
+    }
+
+    // Text — clipped to node bounds so nothing overflows
+    const px = node.isRoot ? nx + 16 : nx + 14;
+    const py = node.isRoot ? ny + 10 : ny + 8;
+    const tw = nw - (node.isRoot ? 32 : 28);
+    const fs = node.isRoot ? 15 : 13;
+    const lh = fs * 1.5;
+    ctx.save();
+    _pngRoundRect(ctx, nx, ny, nw, nh, R);
+    ctx.clip();
+    ctx.fillStyle = node.isRoot ? colors.rootText : colors.nodeText;
+    ctx.font = `${node.isRoot ? 600 : 400} ${fs}px system-ui,-apple-system,sans-serif`;
+    _pngDrawText(ctx, node.text || '', px, py + fs, tw, nh - (node.isRoot ? 20 : 16), lh);
+    ctx.restore();
+  }
 
   canvas.toBlob(b => {
     if (!b) { alert('生成 PNG 失败'); return; }
@@ -9279,7 +9674,7 @@ function resetZoom() {
 // ── keyboard shortcuts ──
 window.addEventListener('keydown', e => {
   const t = e.target;
-  const isText = t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable);
+  const isText = t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable || t.classList?.contains('node-text'));
   const mod = e.metaKey || e.ctrlKey;
 
   // Block native Select-All on the canvas — only allow inside a text input.
@@ -9330,6 +9725,9 @@ window.addEventListener('keydown', e => {
     e.preventDefault();
     addChildNode(id);
   } else if (e.key === 'Enter') {
+    e.preventDefault();
+    addSiblingNode(id);
+  } else if (e.key === 'F2') {
     e.preventDefault();
     focusNodeText(id);
   } else if (e.key === 'Escape') {
@@ -9490,10 +9888,16 @@ function renderNodeRichText(text) {
 
 function renderInlineMd(text) {
   if (text == null) return '';
+  // Phase 0: pull ![alt](url) images out before HTML-escaping.
+  const imgs = [];
+  let s = String(text).replace(/!\[([^\]\n]*)\]\(([^)\s\n]+)\)/g, (_, alt, src) => {
+    imgs.push({ alt, src });
+    return `\u0000IMG${imgs.length - 1}\u0000`;
+  });
   // Phase 1: pull `code` spans out first so their contents don't get
   // re-interpreted by bold/italic/etc. Use a sentinel placeholder.
   const codes = [];
-  let s = String(text).replace(/`([^`\n]+?)`/g, (_, c) => {
+  s = s.replace(/`([^`\n]+?)`/g, (_, c) => {
     codes.push(c);
     return `\u0000CODE${codes.length - 1}\u0000`;
   });
@@ -9514,6 +9918,13 @@ function renderInlineMd(text) {
   s = s.replace(/\n/g, '<br>');
   // Phase 8: restore code spans (escaped contents).
   s = s.replace(/\u0000CODE(\d+)\u0000/g, (_, i) => `<code>${escHtml(codes[+i])}</code>`);
+  // Phase 9: restore images (clickable to open lightbox).
+  s = s.replace(/\u0000IMG(\d+)\u0000/g, (_, i) => {
+    const { alt, src } = imgs[+i];
+    const esc = src.replace(/"/g, '&quot;');
+    const altE = escHtml(alt);
+    return `<img src="${esc}" alt="${altE}" loading="lazy" draggable="false" style="cursor:zoom-in" onclick="event.stopPropagation();openLightbox('${esc}','${altE}')">`;
+  });
   return s;
 }
 
