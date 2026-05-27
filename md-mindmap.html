@@ -6776,12 +6776,13 @@ function flattenNodes(nodes, arr = []) {
 
 function visibleChildren(node) {
   if (node.collapsed) return [];
-  return node.children.filter(c => !c._filterHidden);
+  return node.children.filter(c => !c._filterHidden && !c.isHr);
 }
 
 function flattenVisible(nodes, arr = []) {
   for (const n of nodes) {
     if (n._filterHidden) continue;
+    if (n.isHr) continue;
     arr.push(n);
     if (!n.collapsed) flattenVisible(n.children, arr);
   }
@@ -6862,6 +6863,7 @@ function renderConnectors() {
     if (node.collapsed) continue;
     for (const child of node.children) {
       if (child._filterHidden) continue;
+      if (child.isHr) continue;
       const x1 = node.x + (node.w || NODE_W);
       const y1 = node.y + (node.h || NODE_H) / 2;
       const x2 = child.x;

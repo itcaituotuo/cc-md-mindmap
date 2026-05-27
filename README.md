@@ -1,9 +1,39 @@
 # CC MD MindMap
 
-一款 Markdown 驱动的可视化脑图编辑器，用于文档 review、结构梳理和知识整理。
+一款 Markdown 驱动的可视化脑图编辑器，用于文档 Review、结构梳理和知识整理。
 
 - **纯前端模式**：直接打开 `md-mindmap.html`，无需任何部署，开箱即用。
 - **服务模式**：启动 `ai-proxy.js` 后通过浏览器访问，在纯前端基础上增加 AI 对话能力。
+
+### 启动服务模式
+
+**第一步**：在项目目录下创建 `.env` 文件，填入配置：
+
+```dotenv
+# 必填：OpenAI 或兼容接口的 API Key
+OPENAI_API_KEY=sk-xxxx
+
+# 可选：使用兼容 OpenAI Responses API 的服务地址（默认 https://api.openai.com）
+OPENAI_BASE_URL=https://api.openai.com
+
+# 可选：启用登录校验，两项同时设置才生效
+CC_MD_MINDMAP_USER=your-user
+CC_MD_MINDMAP_PASSWORD=your-password
+```
+
+**第二步**：运行部署脚本：
+
+```bash
+# macOS / Linux
+bash deploy.sh
+```
+
+```cmd
+# Windows（命令提示符）
+deploy.cmd
+```
+
+启动后访问 `http://127.0.0.1:8787/` 即可使用。日志输出到 `ai-proxy.log`。
 
 ## 1. 背景
 
@@ -249,30 +279,4 @@ CC MD MindMap 通过思维导图将 Markdown 转为可导航的结构化视图�
 
 ### 7.4 启动
 
-**第一步**：在项目目录下创建 `.env` 文件，填入配置：
-
-```dotenv
-# 必填：OpenAI 或兼容接口的 API Key
-OPENAI_API_KEY=sk-xxxx
-
-# 可选：使用兼容 OpenAI Responses API 的服务地址（默认 https://api.openai.com）
-OPENAI_BASE_URL=https://api.openai.com
-
-# 可选：启用登录校验，两项同时设置才生效
-CC_MD_MINDMAP_USER=your-user
-CC_MD_MINDMAP_PASSWORD=your-password
-```
-
-**第二步**：运行部署脚本：
-
-```bash
-# macOS / Linux
-bash deploy.sh
-```
-
-```cmd
-# Windows（命令提示符）
-deploy.cmd
-```
-
-启动后访问 `http://127.0.0.1:8787/` 即可使用。日志输出到 `ai-proxy.log`。
+启动步骤见文档顶部「[启动服务模式](#启动服务模式)」。
