@@ -276,7 +276,3 @@ CC MD MindMap 通过思维导图将 Markdown 转为可导航的结构化视图�
 | `POST` | `/api/ai-chat` | 一次性返回 AI 回复 |
 | `POST` | `/api/ai-chat-stream` | SSE 推送（`status` / `text` / `tool` / `done` / `error`） |
 | `POST` | `/api/trash` | 将文件或文件夹移到系统废纸篓（body: `{ "path": "..." }`） |
-
-### 7.4 启动
-
-启动步骤见文档顶部「[启动服务模式](#启动服务模式)」。
