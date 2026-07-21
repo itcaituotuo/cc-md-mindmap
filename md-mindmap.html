@@ -245,16 +245,6 @@
     pointer-events: none;
   }
   header::after { display: none; }
-  .header-pill {
-    background: var(--chrome-bg);
-    border: 1px solid var(--chrome-border);
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
-    height: 44px;
-    display: flex;
-    align-items: center;
-  }
-
   .logo {
     font-family: 'Fraunces', serif;
     font-weight: 600;
@@ -291,17 +281,6 @@
     font-size: 8px;
   }
 
-  .header-left {
-    display: flex;
-    align-items: center;
-    background: var(--chrome-bg);
-    border: 1px solid var(--chrome-border);
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(34,28,19,0.08), 0 1px 2px rgba(34,28,19,0.04);
-    height: 44px;
-    padding: 0 4px;
-    pointer-events: auto;
-  }
   .file-zone {
     display: flex;
     align-items: center;
@@ -739,6 +718,10 @@
     background: var(--chrome-fill);
     min-height: 30px;
   }
+  .filter-bar.aggregate-mode .filter-chips,
+  .filter-bar.aggregate-mode .filter-review {
+    display: none;
+  }
   .filter-bar:focus-within { border-color: var(--accent); }
   .filter-bar .filter-icon { width: 13px; height: 13px; color: var(--ink-muted); flex-shrink: 0; }
   .filter-input {
@@ -884,8 +867,8 @@
   #sidebar.collapsed {
     width: 40px;
     min-width: 40px;
+    display: none;
   }
-  #sidebar.collapsed { display: none; }
 
   /* Sidebar body owns scrolling — vertical for tall lists, horizontal for
      long filenames. min-height:0 is required for a flex child to honor
@@ -1101,6 +1084,9 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .tree-folder .name {
+    flex: 0 1 auto;
+  }
   .tree-status-badges {
     display: inline-flex;
     gap: 3px;
@@ -1126,6 +1112,9 @@
     margin-left: 8px;
     opacity: 0;
     transition: opacity 0.12s;
+  }
+  .tree-folder .tree-actions {
+    margin-left: 0;
   }
   .tree-item:hover .tree-actions,
   .tree-actions:focus-within {
@@ -1155,7 +1144,101 @@
   }
   .tree-children.hidden { display: none; }
 
-  :root[data-theme="dark"] .header-left,
+  /* Cross-file inference index: a pinned, virtual page above the file tree. */
+  .scenario-aggregate-slot {
+    padding: 10px 10px 0;
+    flex: 0 0 auto;
+  }
+  .scenario-aggregate-button {
+    position: relative;
+    width: 100%;
+    min-height: 52px;
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 9px;
+    padding: 8px 10px;
+    border: 1px solid rgba(184,84,31,0.20);
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  .scenario-aggregate-button::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .scenario-aggregate-button:hover {
+    background: rgba(184,84,31,0.14);
+    border-color: rgba(184,84,31,0.34);
+  }
+  .scenario-aggregate-button:focus-visible {
+    outline: 2px solid #0EA5E9;
+    outline-offset: 2px;
+  }
+  .scenario-aggregate-button.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  .scenario-aggregate-icon {
+    grid-row: 1 / 3;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: #fff;
+  }
+  .scenario-aggregate-icon .icon-svg { width: 15px; height: 15px; }
+  .scenario-aggregate-title {
+    grid-column: 2;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .scenario-aggregate-subtitle {
+    grid-column: 2;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .scenario-aggregate-count {
+    grid-column: 3;
+    grid-row: 1 / 3;
+    min-width: 24px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    border: 1px solid rgba(184,84,31,0.18);
+  }
+  .scenario-aggregate-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.52;
+  }
+
   :root[data-theme="dark"] .file-zone,
   :root[data-theme="dark"] .header-right,
   :root[data-theme="dark"] #sidebar-toggle-btn {
@@ -1177,6 +1260,10 @@
   }
   :root[data-theme="dark"] .tree-children {
     border-left-color: rgba(203, 213, 225, 0.14);
+  }
+  :root[data-theme="dark"] .scenario-aggregate-button {
+    border-color: rgba(217,121,62,0.25);
+    background: rgba(217,121,62,0.10);
   }
 
   /* ── MINDMAP CANVAS ── */
@@ -1499,14 +1586,6 @@
     flex-shrink: 0;
   }
 
-  .node-status-badge {
-    font-size: 13px;
-    line-height: 1;
-    flex-shrink: 0;
-    cursor: pointer;
-    opacity: 0.95;
-  }
-
   /* XMind-like outline theme */
   #canvas-wrap {
     background: var(--canvas-bg);
@@ -1575,19 +1654,12 @@
   .mm-node.root.selected {
     border-color: var(--xmind-card-border) !important;
   }
-  .mm-node.level-1,
-  .mm-node.level-2,
-  .mm-node.status-pass,
-  .mm-node.status-fail,
-  .mm-node.status-pending {
+  .mm-node.level-1:not(.root),
+  .mm-node.level-2:not(.root),
+  .mm-node.status-pass:not(.root),
+  .mm-node.status-fail:not(.root),
+  .mm-node.status-pending:not(.root) {
     border-left-color: transparent !important;
-  }
-  .mm-node.root,
-  .mm-node.root.status-pass,
-  .mm-node.root.status-fail,
-  .mm-node.root.status-pending,
-  .mm-node.root.selected {
-    border-color: var(--xmind-card-border) !important;
   }
   .mm-node.level-2:not(.root) {
     background: var(--xmind-card-bg);
@@ -1650,6 +1722,94 @@
   .mm-node.level-2 .node-text {
     font-size: 18px;
     line-height: 1.25;
+  }
+  .mm-node.aggregate-root {
+    border-color: var(--accent) !important;
+    min-width: 250px;
+  }
+  .aggregate-root-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .aggregate-root-copy small {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .mm-node.aggregate-domain .node-text {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .aggregate-domain-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+  }
+  .mm-node.aggregate-source {
+    min-width: 270px;
+    max-width: 420px;
+    padding: 7px 9px;
+    border: 1px solid var(--rule-strong);
+    background: var(--xmind-card-bg);
+    border-radius: 8px;
+  }
+  .mm-node.aggregate-source:hover {
+    background: var(--xmind-card-bg);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  .aggregate-source-copy {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 12px;
+    align-items: center;
+  }
+  .aggregate-source-name {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--xmind-card-text-strong);
+    overflow-wrap: anywhere;
+  }
+  .aggregate-source-path {
+    grid-column: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    line-height: 1.45;
+    color: var(--ink-muted);
+    overflow-wrap: anywhere;
+  }
+  .aggregate-open-source {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: stretch;
+    min-width: 30px;
+    border: 0;
+    border-left: 1px solid var(--rule);
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    font: inherit;
+    font-size: 16px;
+  }
+  .aggregate-open-source:hover { color: var(--accent-deep); }
+  .aggregate-open-source:focus-visible {
+    outline: 2px solid #0EA5E9;
+    outline-offset: 2px;
+  }
+  #canvas-wrap .mm-node.aggregate-content .node-text {
+    cursor: text;
+  }
+  .mm-node.aggregate-content:hover:not(.root):not(.level-2) {
+    box-shadow: 0 0 0 2px var(--accent-soft);
   }
   .mm-node.selected:not(.root):not(.level-2) {
     background: transparent;
@@ -2200,6 +2360,50 @@
     color: var(--ink-faint);
   }
 
+  .scenario-loading {
+    position: absolute;
+    inset: 0;
+    z-index: 12;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .scenario-loading-card {
+    width: min(360px, calc(100vw - 48px));
+    padding: 18px 20px;
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    background: var(--chrome-bg);
+    box-shadow: var(--shadow-lg);
+  }
+  .scenario-loading-title {
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    font-weight: 650;
+    color: var(--ink);
+  }
+  .scenario-loading-detail {
+    margin-top: 6px;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+  }
+  .scenario-loading-track {
+    height: 3px;
+    margin-top: 14px;
+    border-radius: 999px;
+    background: var(--rule);
+    overflow: hidden;
+  }
+  .scenario-loading-bar {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--accent);
+    transition: width 0.16s ease-out;
+  }
+
   /* ── ZOOM CONTROLS ── */
   .zoom-controls {
     position: absolute;
@@ -2248,6 +2452,41 @@
     color: var(--ink-faint);
     background: transparent;
   }
+  #mindmap-focus-btn .focus-exit-icon { display: none; }
+  #mindmap-focus-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -3px;
+  }
+
+  /* Distraction-free canvas. Keep exactly one control visible as the exit
+     affordance; the hidden panels retain their state and return unchanged. */
+  body.mindmap-focus-mode header,
+  body.mindmap-focus-mode #sidebar,
+  body.mindmap-focus-mode #sidebar-toggle-btn,
+  body.mindmap-focus-mode #editor-panel,
+  body.mindmap-focus-mode .ai-chat,
+  body.mindmap-focus-mode .badge-tip,
+  body.mindmap-focus-mode .node-note-popover,
+  body.mindmap-focus-mode .review-summary {
+    display: none !important;
+  }
+  body.mindmap-focus-mode .zoom-controls {
+    right: 16px;
+    bottom: 16px;
+    border-color: rgba(184,84,31,0.32);
+    box-shadow: 0 4px 18px rgba(34,28,19,0.14);
+  }
+  body.mindmap-focus-mode .zoom-controls .zoom-btn:not(#mindmap-focus-btn) {
+    display: none;
+  }
+  body.mindmap-focus-mode #mindmap-focus-btn {
+    width: 38px;
+    height: 36px;
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  body.mindmap-focus-mode #mindmap-focus-btn .focus-enter-icon { display: none; }
+  body.mindmap-focus-mode #mindmap-focus-btn .focus-exit-icon { display: block; }
 
   .canvas-v-scroll {
     position: absolute;
@@ -2458,30 +2697,9 @@
   @keyframes ai-spin {
     to { transform: rotate(360deg); }
   }
-  .ai-tool-strip {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    margin: 0 0 8px;
-  }
   .ai-tool-label {
     color: var(--ink-muted);
     font-size: 11px;
-    line-height: 1.2;
-  }
-  .ai-tool-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    max-width: 100%;
-    padding: 4px 7px;
-    border: 1px solid rgba(14, 165, 233, 0.18);
-    border-radius: 999px;
-    background: rgba(14, 165, 233, 0.08);
-    color: #0369A1;
-    font-size: 11px;
-    font-weight: 700;
     line-height: 1.2;
   }
   .ai-tool-logo {
@@ -2967,16 +3185,11 @@
     transform: translateY(0);
     box-shadow: 0 4px 10px rgba(14, 165, 233, 0.24);
   }
-  .ai-chat-send:hover,
   .ai-chat-attach:hover,
   .ai-chat-toggle:hover,
   .ai-chat-clear:hover {
     background: var(--chrome-fill-hover);
     border-color: var(--chrome-border-hover);
-  }
-  .ai-chat-send:hover {
-    background: linear-gradient(135deg, #38BDF8, #0369A1);
-    border-color: transparent;
   }
   .ai-chat-toggle {
     position: absolute;
@@ -3018,8 +3231,6 @@
     vertical-align: -2px;
     flex-shrink: 0;
   }
-  .icon-svg.lg { width: 22px; height: 22px; }
-  .icon-svg.xl { width: 40px; height: 40px; }
   .btn .icon-svg { vertical-align: -3px; margin-right: 2px; }
   .zoom-btn .icon-svg { width: 13px; height: 13px; vertical-align: middle; }
   .tree-item .icon-svg { width: 13px; height: 13px; color: rgba(75, 85, 99, 0.70); }
@@ -3027,34 +3238,27 @@
   .tree-folder .icon-svg { color: rgba(31, 41, 55, 0.88); }
   .tree-item.active .icon-svg { color: #0EA5E9; }
   .node-status-badge {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--paper);
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
     flex-shrink: 0;
+    cursor: pointer;
+    opacity: 0.95;
   }
   .node-status-badge .icon-svg {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     vertical-align: 0;
   }
   .mm-node.status-pass .node-status-badge { background: var(--pass); }
   .mm-node.status-fail .node-status-badge { background: var(--fail); }
   .mm-node.status-pending .node-status-badge { background: var(--pending); }
-  /* Final XMind-style status dot override after icon-system rules */
-  .node-status-badge {
-    width: 12px;
-    height: 12px;
-    border-radius: 999px;
-    color: #fff;
-  }
-  .node-status-badge .icon-svg {
-    width: 8px;
-    height: 8px;
-  }
   .ai-chat-send .icon-svg,
   .ai-chat-attach .icon-svg,
   .ai-chat-toggle .icon-svg,
@@ -3463,27 +3667,27 @@
         <svg class="icon-svg" viewBox="0 0 14 14" fill="currentColor" stroke="none"><circle cx="3" cy="7" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="11" cy="7" r="1.2"/></svg>
       </button>
       <div class="overflow-dropdown" id="overflow-dropdown" style="display:none">
-        <button class="overflow-dropdown-item" onclick="toggleReviewSummary(); closeOverflowMenu()">
+        <button class="overflow-dropdown-item" onclick="toggleReviewSummary(); closeOverflowMenu()" title="查看当前文件的审阅摘要">
           <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h8M3 7h8M3 11h5"/></svg>
-          <span>Review 摘要</span>
+          <span>查看审阅摘要</span>
         </button>
         <div class="overflow-divider"></div>
-        <button class="overflow-dropdown-item" onclick="exportMindmapPng(); closeOverflowMenu()">
+        <button class="overflow-dropdown-item" onclick="exportMindmapPng(); closeOverflowMenu()" title="导出为高清 PNG 图片">
           <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.2"/><circle cx="4.5" cy="4.5" r="1"/><path d="M1.5 9.5l3-3 2.5 2.5 2-2 3 3"/></svg>
-          <span>导出 PNG</span>
+          <span>导出高清图片</span>
         </button>
-        <button class="overflow-dropdown-item" onclick="exportStandaloneHtml(); closeOverflowMenu()">
+        <button class="overflow-dropdown-item" onclick="exportStandaloneHtml(); closeOverflowMenu()" title="导出为可离线打开的独立 HTML 网页">
           <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 1.5H3a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V5.5L8 1.5z"/><path d="M8 1.5V5.5h3"/><path d="M4.5 8l1.5-1.5L4.5 5M9.5 8 8 6.5 9.5 5"/></svg>
-          <span>导出独立 HTML</span>
+          <span>导出独立网页</span>
         </button>
-        <button class="overflow-dropdown-item" onclick="exportCurrentMarkdown(); closeOverflowMenu()">
+        <button class="overflow-dropdown-item" onclick="exportCurrentMarkdown(); closeOverflowMenu()" title="下载当前 Markdown 文件">
           <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1.5v8M4 7l3 3 3-3M2 11.5h10"/></svg>
-          <span>下载当前 Markdown</span>
+          <span>下载当前文档</span>
         </button>
         <div class="overflow-divider"></div>
         <button class="overflow-dropdown-item" id="overflow-theme-item" onclick="toggleTheme(); closeOverflowMenu()">
           <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="3.2"/><path d="M7 1.4v1.4M7 11.2v1.4M1.4 7h1.4M11.2 7h1.4M3 3l1 1M10 10l1 1M3 11l1-1M10 4l1-1"/></svg>
-          <span id="overflow-theme-label">切换暗色主题</span>
+          <span id="overflow-theme-label">切换深色主题</span>
         </button>
       </div>
     </div>
@@ -3555,6 +3759,16 @@
         </button>
       </div>
     </div>
+    <div class="scenario-aggregate-slot">
+      <button class="scenario-aggregate-button" id="scenario-aggregate-button" type="button" onclick="openScenarioAggregate()" title="打开业务场景推断聚合页 (Cmd/Ctrl+G)" disabled>
+        <span class="scenario-aggregate-icon" aria-hidden="true">
+          <svg class="icon-svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3.5h3M3 8h3M3 12.5h3M6 3.5v9M6 8h3.5M9.5 6.2v3.6M9.5 6.2H13M9.5 9.8H13"/><circle cx="2.2" cy="3.5" r=".8" fill="currentColor" stroke="none"/><circle cx="2.2" cy="8" r=".8" fill="currentColor" stroke="none"/><circle cx="2.2" cy="12.5" r=".8" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="scenario-aggregate-title">业务场景推断</span>
+        <span class="scenario-aggregate-subtitle">待人工确认 · 跨文件</span>
+        <span class="scenario-aggregate-count" id="scenario-aggregate-count" hidden>—</span>
+      </button>
+    </div>
     <div class="sidebar-body">
       <div id="file-tree"></div>
     </div>
@@ -3575,6 +3789,13 @@
       <div class="big-icon">Aa</div>
       <p>打开 Markdown 文件，开始浏览与编辑。</p>
       <p>多级标题 · 节点编辑 · 状态标注 · 撤销重做</p>
+    </div>
+    <div class="scenario-loading" id="scenario-loading" aria-live="polite">
+      <div class="scenario-loading-card">
+        <div class="scenario-loading-title">正在汇总业务场景推断</div>
+        <div class="scenario-loading-detail" id="scenario-loading-detail">准备读取 Markdown 文件…</div>
+        <div class="scenario-loading-track"><div class="scenario-loading-bar" id="scenario-loading-bar"></div></div>
+      </div>
     </div>
     <div class="ai-chat" id="ai-chat">
       <div class="ai-chat-panel" role="dialog" aria-label="知识库助手">
@@ -3623,6 +3844,10 @@
       </button>
       <button class="zoom-btn" id="zoom-lock-btn" onclick="toggleZoomLock()" title="锁定缩放">
         <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="6" width="7.6" height="5.4" rx="1"/><path d="M4.6 6V4.6a2.4 2.4 0 014.8 0V6"/></svg>
+      </button>
+      <button class="zoom-btn" id="mindmap-focus-btn" onclick="toggleMindmapFocusMode()" title="全屏展示导图" aria-label="全屏展示导图" aria-pressed="false">
+        <svg class="icon-svg focus-enter-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2H2v3M9 2h3v3M5 12H2V9M9 12h3V9"/></svg>
+        <svg class="icon-svg focus-exit-icon" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h3V2M12 5H9V2M2 9h3v3M12 9H9v3"/></svg>
       </button>
     </div>
   </div>
@@ -3684,7 +3909,7 @@
 
 <div class="review-summary" id="review-summary" style="display:none">
   <div class="review-summary-header">
-    <span class="review-summary-title">Review 摘要</span>
+    <span class="review-summary-title">审阅摘要</span>
     <div class="review-summary-tabs">
       <button class="rs-tab active" data-tab="all" onclick="setReviewSummaryTab('all')">全部</button>
       <button class="rs-tab" data-tab="fail" onclick="setReviewSummaryTab('fail')">❌</button>
@@ -3697,9 +3922,6 @@
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
 // ══════════════════════════════════════════════
 //  ICONS — monoline svg, currentColor
 // ══════════════════════════════════════════════
@@ -3714,22 +3936,13 @@ const ICONS = {
   folder:    _SVG('<path d="M2 4.2a.8.8 0 01.8-.8h2.6l1.1 1.4h4.7a.8.8 0 01.8.8v4.6a.8.8 0 01-.8.8H2.8a.8.8 0 01-.8-.8V4.2z"/>'),
   file:      _SVG('<path d="M3.6 1.8h4.6L11 4.6v7.1a.6.6 0 01-.6.6H3.6a.6.6 0 01-.6-.6V2.4a.6.6 0 01.6-.6z"/><path d="M8 1.8v3h3"/>'),
   chevron:   _SVG('<path d="M3.8 5.3L7 8.5l3.2-3.2"/>'),
-  download:  _SVG('<path d="M7 2v7M4 6l3 3 3-3M3 11.5h8"/>'),
-  upload:    _SVG('<path d="M7 11.5V4M4 7l3-3 3 3M3 2.5h8"/>'),
-  undo:      _SVG('<path d="M5.2 4L3 6.2l2.2 2.2M3 6.2h5.5a3 3 0 010 6H6"/>'),
-  redo:      _SVG('<path d="M8.8 4L11 6.2 8.8 8.4M11 6.2H5.5a3 3 0 000 6H8"/>'),
   code:      _SVG('<path d="M5 4L2 7l3 3M9 4l3 3-3 3"/>'),
   close:     _SVG('<path d="M3.5 3.5l7 7M10.5 3.5l-7 7"/>'),
   clearStatus: _SVG('<circle cx="7" cy="7" r="4.5"/><path d="M4.6 7h4.8"/>'),
   note:      _SVG('<path d="M3 3h7v8L7 9.2 3 11V3z"/>'),
-  target:    _SVG('<circle cx="7" cy="7" r="2.4"/><path d="M7 1.4v1.8M7 10.8v1.8M1.4 7h1.8M10.8 7h1.8"/>'),
-  zoomIn:    _SVG('<path d="M7 4v6M4 7h6"/>'),
-  zoomOut:   _SVG('<path d="M4 7h6"/>'),
   lock:      _SVG('<rect x="3.2" y="6" width="7.6" height="5.4" rx="1"/><path d="M4.6 6V4.6a2.4 2.4 0 014.8 0V6"/>'),
   unlock:    _SVG('<rect x="3.2" y="6" width="7.6" height="5.4" rx="1"/><path d="M4.6 6V4.6a2.4 2.4 0 014.4-1.3"/>'),
   edit:      _SVG('<path d="M9.5 2.5l2 2-7 7L2 12l.5-2.5 7-7z"/>'),
-  dot:       _SVG('<circle cx="7" cy="7" r="2.5" fill="currentColor"/>'),
-  ai:        _SVG('<path d="M3.2 5.2a3.8 3.8 0 017.6 0v2.6a3.8 3.8 0 01-3.8 3.8H4.2L2.4 12l.5-1.7a3.8 3.8 0 01.3-5.1z"/><path d="M5 6.8h.1M7 6.8h.1M9 6.8h.1"/>'),
 };
 const STATUS_ICON = { pass: 'check', fail: 'x', pending: 'clock' };
 
@@ -3740,6 +3953,10 @@ const state = {
   projectRootPath: null,
   currentFile: null,
   fileOpenToken: 0,
+  aggregateMode: false,
+  aggregateToken: 0,
+  aggregateCount: null,
+  aggregateCache: null,
   nodes: [],          // parsed tree nodes
   scale: 1,
   offsetX: 0,
@@ -3748,6 +3965,7 @@ const state = {
   dragStart: null,
   nodeDrag: null,
   zoomLocked: false,
+  focusMode: false,
   vScrollDrag: null,
   editorOpen: false,
   editorMode: 'source',
@@ -3782,7 +4000,7 @@ const NODE_DRAG_PREVIEW_OFFSET_X = 36;
 const NODE_DRAG_PREVIEW_OFFSET_Y = 22;
 const NODE_DRAG_AUTOPAN_EDGE = 60;
 const NODE_DRAG_AUTOPAN_MAX_SPEED = 18;
-const LOCKED_WHEEL_PAN_SPEED = 1.2;
+const CANVAS_WHEEL_PAN_SPEED = 1.2;
 const AI_PROXY_ENDPOINT = '/api/ai-chat';
 const AI_PROXY_STREAM_ENDPOINT = '/api/ai-chat-stream';
 const AUTH_TOKEN_KEY = 'md-mindmap-auth-token';
@@ -3917,7 +4135,7 @@ function applyTheme(theme) {
 function updateThemeToggle() {
   const dark = getTheme() === 'dark';
   const label = document.getElementById('overflow-theme-label');
-  if (label) label.textContent = dark ? '切换到亮色主题' : '切换到暗色主题';
+  if (label) label.textContent = dark ? '切换浅色主题' : '切换深色主题';
 }
 
 function toggleTheme() {
@@ -4527,7 +4745,7 @@ function copyAiMessage(msg, btn) {
   let text = msg.dataset.copyText || '';
   if (!text) {
     const clone = msg.cloneNode(true);
-    clone.querySelectorAll('.ai-msg-actions, .ai-tool-strip, .ai-tool-list, .ai-msg-images, .ai-pending-row').forEach((el) => el.remove());
+    clone.querySelectorAll('.ai-msg-actions, .ai-tool-list, .ai-msg-images, .ai-pending-row').forEach((el) => el.remove());
     text = (clone.textContent || '').trim();
   }
   const indicate = () => {
@@ -5410,7 +5628,7 @@ function snapshotCurrentViewport() {
   // pan/zoom settle and unload — NOT from persistBrowserProject directly,
   // because that runs early in openFile when state.scale is still the previous
   // file's value and would clobber the just-restored memo.
-  if (!state.currentFile) return;
+  if (state.aggregateMode || !state.currentFile) return;
   const f = state.files[state.currentFile];
   if (!f) return;
   if (!Number.isFinite(state.scale)) return;
@@ -5700,6 +5918,340 @@ async function walkDroppedEntry(entry, prefix, out) {
   }
 }
 
+// ── Cross-file "业务场景推断（待人工确认）" aggregate view ─────────────
+function updateScenarioAggregateButton() {
+  const button = document.getElementById('scenario-aggregate-button');
+  const count = document.getElementById('scenario-aggregate-count');
+  if (!button || !count) return;
+  button.disabled = Object.keys(state.files).length === 0;
+  button.classList.toggle('active', state.aggregateMode);
+  count.hidden = state.aggregateCount == null;
+  count.textContent = state.aggregateCount == null ? '—' : String(state.aggregateCount);
+}
+
+function setScenarioLoading(visible, completed = 0, total = 0, detail = '') {
+  const overlay = document.getElementById('scenario-loading');
+  const detailEl = document.getElementById('scenario-loading-detail');
+  const bar = document.getElementById('scenario-loading-bar');
+  if (overlay) overlay.style.display = visible ? 'flex' : 'none';
+  if (detailEl) detailEl.textContent = detail || (total ? `已读取 ${completed} / ${total} 个文件` : '准备读取 Markdown 文件…');
+  if (bar) bar.style.width = total ? `${Math.min(100, Math.round(completed / total * 100))}%` : '0%';
+}
+
+function resetFilterStateForView() {
+  const f = state.filter;
+  f.keyword = '';
+  f.statuses.clear();
+  f.reviewMode = false;
+  f.matches = [];
+  f.visible = new Set();
+  f.cursor = -1;
+  const input = document.getElementById('filter-input');
+  if (input) input.value = '';
+  updateFilterCountUI();
+}
+
+function captureAggregateFilterState() {
+  const f = state.filter;
+  return {
+    keyword: f.keyword,
+    statuses: Array.from(f.statuses),
+    reviewMode: f.reviewMode,
+    matches: f.matches.slice(),
+    visible: Array.from(f.visible),
+    cursor: f.cursor,
+  };
+}
+
+function restoreAggregateFilterState(saved) {
+  const f = state.filter;
+  const value = saved || {};
+  f.keyword = String(value.keyword || '');
+  f.statuses = new Set(Array.isArray(value.statuses) ? value.statuses : []);
+  f.reviewMode = !!value.reviewMode;
+  f.matches = Array.isArray(value.matches) ? value.matches.slice() : [];
+  f.visible = new Set(Array.isArray(value.visible) ? value.visible : []);
+  f.cursor = Number.isInteger(value.cursor) ? value.cursor : -1;
+  const input = document.getElementById('filter-input');
+  if (input) input.value = f.keyword;
+  updateFilterCountUI();
+}
+
+function snapshotAggregateView() {
+  if (!state.aggregateMode || !state.nodes.length) return;
+  const cache = state.aggregateCache || {};
+  cache.nodes = state.nodes;
+  cache.view = {
+    scale: state.scale,
+    offsetX: state.offsetX,
+    offsetY: state.offsetY,
+  };
+  cache.filter = captureAggregateFilterState();
+  state.aggregateCache = cache;
+}
+
+function isAggregateCacheValid(cache, paths) {
+  if (!cache || !Array.isArray(cache.nodes) || !cache.nodes.length || !Array.isArray(cache.sources)) return false;
+  if (cache.sources.length !== paths.length) return false;
+  for (let i = 0; i < paths.length; i++) {
+    const source = cache.sources[i];
+    const file = state.files[paths[i]];
+    if (!source || source.path !== paths[i] || !isFileLoaded(file) || source.content !== file.content) return false;
+  }
+  return true;
+}
+
+function isScenarioInferenceHeading(node) {
+  if (!node || node.isText || node.isBullet || node.isCode || node.isTable || node.isHr) return false;
+  const text = String(node.text || '').replace(/\s+/g, ' ').trim();
+  return /^业务场景推断\s*[（(]\s*待人工确认\s*[）)]$/.test(text);
+}
+
+function aggregatePathParts(path) {
+  const parts = normalizeProjectPath(path).split('/').filter(Boolean);
+  const rootName = normalizeProjectPath(state.projectRootPath).split('/').filter(Boolean).pop();
+  if (rootName && parts[0] === rootName) parts.shift();
+  return parts;
+}
+
+function cloneAggregateSubtree(node, level, sourcePath, nextAggregateId, sourceSectionIndex = 0) {
+  const clone = {
+    ...node,
+    id: nextAggregateId(),
+    level,
+    sourceLevel: node.sourceLevel || node.level,
+    children: [],
+    collapsed: false,
+    aggregateContent: true,
+    sourcePath,
+    sourceLineIndex: node.lineIndex,
+    sourceSectionIndex,
+  };
+  delete clone.x;
+  delete clone.y;
+  delete clone.w;
+  delete clone.h;
+  delete clone._filterHidden;
+  if (Array.isArray(node.tableHeaders)) clone.tableHeaders = node.tableHeaders.slice();
+  if (Array.isArray(node.cells)) clone.cells = node.cells.slice();
+  if (Array.isArray(node.rows)) {
+    clone.rows = node.rows.map(row => ({ ...row, cells: Array.isArray(row.cells) ? row.cells.slice() : row.cells }));
+  }
+  clone.children = (node.children || []).map(child => cloneAggregateSubtree(child, level + 1, sourcePath, nextAggregateId, sourceSectionIndex));
+  return clone;
+}
+
+function buildScenarioAggregateNodes(paths) {
+  let id = 0;
+  const nextAggregateId = () => ++id;
+  const domains = new Map();
+  let sectionCount = 0;
+  let sourceFileCount = 0;
+
+  for (const path of paths) {
+    const file = state.files[path];
+    if (!isFileLoaded(file)) continue;
+    const parsed = parseMarkdown(String(file.content || ''), { filePath: path, readOnly: true });
+    const sections = flattenNodes(parsed).filter(isScenarioInferenceHeading);
+    if (!sections.length) continue;
+
+    sectionCount += sections.length;
+    sourceFileCount++;
+    const parts = aggregatePathParts(path);
+    const domainName = parts.length > 1 ? parts[0] : '未分组';
+    if (!domains.has(domainName)) domains.set(domainName, []);
+    domains.get(domainName).push({ path, parts, sections });
+  }
+
+  const root = {
+    id: nextAggregateId(),
+    level: 1,
+    text: '业务场景推断',
+    status: null,
+    children: [],
+    lineIndex: 0,
+    isRoot: true,
+    aggregateRoot: true,
+    aggregateSectionCount: sectionCount,
+    aggregateFileCount: sourceFileCount,
+  };
+
+  for (const domainName of Array.from(domains.keys()).sort((a, b) => a.localeCompare(b, 'zh-CN'))) {
+    const files = domains.get(domainName).sort((a, b) => a.path.localeCompare(b.path, 'zh-CN'));
+    const domain = {
+      id: nextAggregateId(), level: 2, text: domainName, status: null, children: [], lineIndex: 0,
+      aggregateDomain: true, aggregateFileCount: files.length,
+    };
+    for (const entry of files) {
+      const fileName = entry.parts[entry.parts.length - 1] || basenameOfProjectPath(entry.path);
+      const sourceNode = {
+        id: nextAggregateId(), level: 3, text: fileName, status: null, children: [],
+        lineIndex: entry.sections[0].lineIndex,
+        aggregateSource: true,
+        sourcePath: entry.path,
+        sourceLineIndex: entry.sections[0].lineIndex,
+        aggregateSections: entry.sections.map((section, index) => ({
+          index, lineIndex: section.lineIndex, level: section.level,
+        })),
+      };
+      if (entry.sections.length === 1) {
+        sourceNode.children = (entry.sections[0].children || []).map(child =>
+          cloneAggregateSubtree(child, 4, entry.path, nextAggregateId, 0));
+      } else {
+        sourceNode.children = entry.sections.map((section, index) => ({
+          id: nextAggregateId(), level: 4, text: `推断 ${index + 1}`, status: null,
+          children: (section.children || []).map(child => cloneAggregateSubtree(child, 5, entry.path, nextAggregateId, index)),
+          lineIndex: section.lineIndex, aggregateSection: true, collapsed: false,
+          sourcePath: entry.path, sourceLineIndex: section.lineIndex, sourceSectionIndex: index, sourceLevel: section.level,
+        }));
+      }
+      if (!sourceNode.children.length) {
+        sourceNode.children.push({
+          id: nextAggregateId(), level: 4, text: '该节点暂无内容', status: null, children: [],
+          lineIndex: sourceNode.sourceLineIndex, aggregateContent: true, aggregatePlaceholder: true, isBullet: true,
+          sourceLevel: (entry.sections[0].level || 3) + 1,
+          sourcePath: entry.path, sourceLineIndex: sourceNode.sourceLineIndex, sourceSectionIndex: 0,
+        });
+      }
+      domain.children.push(sourceNode);
+    }
+    root.children.push(domain);
+  }
+  _nextNodeId = Math.max(_nextNodeId, id + 1);
+  return { nodes: [root], sectionCount, sourceFileCount };
+}
+
+async function openAggregateSource(path, lineIndex, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  await openFile(path);
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    const node = findBestNodeForLine(Number(lineIndex) || 0);
+    if (!node) return;
+    expandAncestorsToNode(node.id);
+    layoutTree(state.nodes);
+    renderMindmap({
+      fit: false,
+      onSettle: () => {
+        selectNode(node.id);
+        ensureNodeVisible(node.id, { allowZoom: true });
+      },
+    });
+  }));
+}
+
+async function openScenarioAggregate() {
+  const paths = Object.keys(state.files).filter(isMarkdownPath).sort((a, b) => a.localeCompare(b, 'zh-CN'));
+  if (!paths.length) return;
+  if (state.aggregateMode) return;
+
+  const cached = isAggregateCacheValid(state.aggregateCache, paths) ? state.aggregateCache : null;
+
+  snapshotCurrentViewport();
+  const editor = document.getElementById('raw-editor');
+  if (state.currentFile && editor && state.files[state.currentFile]) state.files[state.currentFile].editorScroll = editor.scrollTop;
+  const token = ++state.aggregateToken;
+  state.fileOpenToken++;
+  clearTimeout(state.editorTimer);
+  state.aggregateMode = true;
+  state.selectedNodeId = null;
+  state.selectedNodeIds.clear();
+  state.markNavNodeId = null;
+  state.editorSyncNodeId = null;
+  if (cached) restoreAggregateFilterState(cached.filter);
+  else resetFilterStateForView();
+  state.nodes = cached ? cached.nodes : [];
+  if (cached) {
+    const maxCachedId = flattenNodes(state.nodes).reduce((max, node) => Math.max(max, Number(node.id) || 0), 0);
+    _nextNodeId = Math.max(_nextNodeId, maxCachedId + 1);
+  }
+
+  document.getElementById('current-filename').textContent = '业务场景推断 · 聚合';
+  document.getElementById('current-filename').title = '跨文件业务场景推断（待人工确认）';
+  for (const id of ['save-btn', 'undo-btn', 'redo-btn', 'mark-prev-btn', 'mark-next-btn', 'overflow-menu', 'editor-toggle', 'stats']) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  }
+  state.editorOpen = false;
+  document.getElementById('editor-panel').classList.remove('open');
+  updateEditorPanelLayout();
+  setFilterBarVisible(true);
+  document.getElementById('filter-bar')?.classList.add('aggregate-mode');
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('mindmap').innerHTML = '';
+  document.getElementById('connector-svg').innerHTML = '';
+  showSaveStatus('');
+  rebuildTree();
+
+  if (cached) {
+    const view = cached.view;
+    state.aggregateCount = cached.sectionCount;
+    setScenarioLoading(false);
+    document.getElementById('current-filename').textContent = `业务场景推断 · ${cached.sectionCount}`;
+    document.getElementById('current-filename').title = `${cached.sectionCount} 个待确认节点，来自 ${cached.sourceFileCount} 个文件${cached.failed ? `；${cached.failed} 个文件读取失败` : ''}`;
+    if (view && Number.isFinite(view.scale)) {
+      state.scale = view.scale;
+      state.offsetX = view.offsetX;
+      state.offsetY = view.offsetY;
+    }
+    renderMindmap({
+      fit: !view,
+      onSettle: view ? () => {
+        state.scale = view.scale;
+        state.offsetX = view.offsetX;
+        state.offsetY = view.offsetY;
+        applyTransform();
+      } : undefined,
+    });
+    if (view) applyTransform();
+    updateScenarioAggregateButton();
+    return;
+  }
+
+  setScenarioLoading(true, 0, paths.length);
+
+  let failed = 0;
+  const batchSize = 24;
+  for (let start = 0; start < paths.length; start += batchSize) {
+    const batch = paths.slice(start, start + batchSize);
+    const loaded = await Promise.all(batch.map(path => readFileEntry(path, { silent: true })));
+    failed += loaded.filter(ok => !ok).length;
+    if (token !== state.aggregateToken || !state.aggregateMode) return;
+    const completed = Math.min(paths.length, start + batch.length);
+    setScenarioLoading(true, completed, paths.length);
+    await yieldToBrowser();
+  }
+
+  if (token !== state.aggregateToken || !state.aggregateMode) return;
+  setScenarioLoading(true, paths.length, paths.length, '正在构建聚合脑图…');
+  await yieldToBrowser();
+  const aggregate = buildScenarioAggregateNodes(paths);
+  if (token !== state.aggregateToken || !state.aggregateMode) return;
+
+  state.nodes = aggregate.nodes;
+  state.aggregateCount = aggregate.sectionCount;
+  state.scale = 1;
+  state.offsetX = 0;
+  state.offsetY = 0;
+  layoutTree(state.nodes);
+  state.aggregateCache = {
+    nodes: state.nodes,
+    sectionCount: aggregate.sectionCount,
+    sourceFileCount: aggregate.sourceFileCount,
+    failed,
+    sources: paths.map(path => ({ path, content: state.files[path]?.content })),
+    view: null,
+    filter: captureAggregateFilterState(),
+  };
+  setScenarioLoading(false);
+  document.getElementById('current-filename').textContent = `业务场景推断 · ${aggregate.sectionCount}`;
+  document.getElementById('current-filename').title = `${aggregate.sectionCount} 个待确认节点，来自 ${aggregate.sourceFileCount} 个文件${failed ? `；${failed} 个文件读取失败` : ''}`;
+  renderMindmap({ fit: true });
+  updateScenarioAggregateButton();
+}
+
 // ── File-tree rendering (folder-aware) ──
 function getTreeFolderStates() {
   try {
@@ -5740,7 +6292,7 @@ function buildTreeData() {
 function countFileStatuses(path) {
   // For the currently-open file: walk the in-memory tree so freshly-edited
   // status changes show up immediately (without waiting for an autosave).
-  if (path === state.currentFile && state.nodes && state.nodes.length) {
+  if (!state.aggregateMode && path === state.currentFile && state.nodes && state.nodes.length) {
     const counts = { pass: 0, fail: 0, pending: 0 };
     for (const n of getMarkedNodes()) {
       const s = nodeDisplayStatus(n);
@@ -5779,7 +6331,7 @@ function renderTreeNode(node, container, depth, options = {}) {
     const folder = node.folders[name];
     const folderPath = joinProjectPath(node.path || '', name);
     const row = document.createElement('div');
-    const hasActive = !!(state.currentFile && (state.currentFile === folderPath || state.currentFile.startsWith(folderPath + '/')));
+    const hasActive = !!(!state.aggregateMode && state.currentFile && (state.currentFile === folderPath || state.currentFile.startsWith(folderPath + '/')));
     const savedState = folderStates[folderPath]; // true=expanded, false=collapsed, undefined=no explicit choice
     const startExpanded = savedState !== undefined ? savedState : (hasActive || !!options.expandAll);
     row.className = 'tree-item tree-folder' + (startExpanded ? '' : ' collapsed');
@@ -5817,7 +6369,7 @@ function renderTreeNode(node, container, depth, options = {}) {
   if (!node._sortedFiles) node._sortedFiles = node.files.slice().sort((a, b) => a.name.localeCompare(b.name));
   const sortedFiles = node._sortedFiles;
   let desiredLimit = node._renderedFileLimit || TREE_FILE_RENDER_BATCH;
-  if (state.currentFile) {
+  if (!state.aggregateMode && state.currentFile) {
     const activeIdx = sortedFiles.findIndex(f => f.path === state.currentFile);
     if (activeIdx >= 0) desiredLimit = Math.max(desiredLimit, activeIdx + 1);
   }
@@ -5833,7 +6385,7 @@ function renderTreeNode(node, container, depth, options = {}) {
     row.innerHTML = `${ICONS.file}<span class="name">${escHtml(f.name)}</span>${badgesHtml}<span class="tree-actions"><button class="tree-action-btn browser-only" title="仅从浏览器移除" onclick="removeFileFromBrowser('${escJs(f.path)}', event)">${ICONS.close}</button><button class="tree-action-btn danger" title="删除文件" onclick="deleteFile('${escJs(f.path)}', event)">${ICONS.trash}</button></span>`;
     row.title = f.path;
     row.onclick = () => openFile(f.path);
-    if (state.currentFile === f.path) row.classList.add('active');
+    if (!state.aggregateMode && state.currentFile === f.path) row.classList.add('active');
     fragment.appendChild(row);
   }
   if (fileLimit < sortedFiles.length) {
@@ -5857,9 +6409,12 @@ function rebuildTree() {
   const root = buildTreeData();
   root.path = '';
   renderTreeNode(root, tree, 0);
+  updateScenarioAggregateButton();
 }
 
 function clearCurrentFileView() {
+  state.aggregateMode = false;
+  state.aggregateToken++;
   state.currentFile = null;
   state.nodes = [];
   state.editorSyncNodeId = null;
@@ -5876,6 +6431,7 @@ function clearCurrentFileView() {
   document.getElementById('editor-panel').classList.remove('open');
   updateEditorPanelLayout();
   document.getElementById('empty-state').style.display = '';
+  document.getElementById('filter-bar')?.classList.remove('aggregate-mode');
   document.getElementById('raw-editor').value = '';
   updateRawEditorLineNumbers();
   syncRawEditorScroll();
@@ -6144,11 +6700,17 @@ async function deleteFolder(path, event) {
 }
 
 async function openFile(name) {
+  const f = state.files[name];
+  if (!f) return;
   const lockedScale = state.zoomLocked ? state.scale : null;
+  const leavingAggregate = state.aggregateMode;
+  if (leavingAggregate) snapshotAggregateView();
+  state.aggregateMode = false;
+  state.aggregateToken++;
   // Snapshot the viewport of the file we're leaving so we can restore it on
   // the next visit. We only stash if there's a currently-open file; first
   // load has no prior viewport.
-  if (state.currentFile && state.currentFile !== name && state.files[state.currentFile]) {
+  if (!leavingAggregate && state.currentFile && state.currentFile !== name && state.files[state.currentFile]) {
     state.files[state.currentFile].view = {
       scale: state.scale,
       offsetX: state.offsetX,
@@ -6158,8 +6720,6 @@ async function openFile(name) {
     if (leavingEditor) state.files[state.currentFile].editorScroll = leavingEditor.scrollTop;
   }
 
-  const f = state.files[name];
-  if (!f) return;
   // Capture target editor scroll IMMEDIATELY — any syncRawEditorScroll() call
   // below (e.g. the `if (!isFileLoaded(f))` reset block) would otherwise wipe
   // f.editorScroll to 0 before we get a chance to use it.
@@ -6183,8 +6743,15 @@ async function openFile(name) {
   document.getElementById('editor-toggle').style.display = '';
   document.getElementById('stats').style.display = '';
   setFilterBarVisible(true);
-  clearFilter();
+  document.getElementById('filter-bar')?.classList.remove('aggregate-mode');
+  if (leavingAggregate) {
+    state.nodes = [];
+    resetFilterStateForView();
+  } else {
+    clearFilter();
+  }
   document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('scenario-loading').style.display = 'none';
   if (!isFileLoaded(f)) {
     document.getElementById('raw-editor').value = '';
     updateRawEditorLineNumbers();
@@ -6199,6 +6766,7 @@ async function openFile(name) {
   document.querySelectorAll('.tree-item').forEach(el => {
     el.classList.toggle('active', el.dataset.file === name);
   });
+  updateScenarioAggregateButton();
 
   const loaded = await readFileEntry(name);
   if (token !== state.fileOpenToken || state.currentFile !== name) return;
@@ -6408,13 +6976,14 @@ function normalizeFencedNodes(nodes) {
   }
 }
 
-function parseMarkdown(md) {
+function parseMarkdown(md, opts = {}) {
   const lines = md.split('\n');
   const nodes = [];
   _nextNodeId = 0;
 
   // root: first heading or filename
-  let rootTitle = state.currentFile?.replace(/\.(md|markdown)$/i, '') || 'Root';
+  const contextFile = opts.filePath || state.currentFile;
+  let rootTitle = contextFile?.replace(/\.(md|markdown)$/i, '') || 'Root';
   let rootStatus = null;
   let contentStartIndex = 0;
   let frontMatter = '';
@@ -6434,7 +7003,7 @@ function parseMarkdown(md) {
       break;
     }
   }
-  if (state.currentFile && state.files[state.currentFile]) {
+  if (!opts.readOnly && state.currentFile && state.files[state.currentFile]) {
     state.files[state.currentFile].frontMatter = frontMatter;
   }
 
@@ -6928,7 +7497,7 @@ function renderMindmap(opts = {}) {
     const displayStatus = nodeDisplayStatus(node);
     const isPrimarySel = state.selectedNodeId === node.id;
     const isSecondarySel = !isPrimarySel && state.selectedNodeIds.has(node.id);
-    el.className = `mm-node level-${node.level}` + (node.isRoot ? ' root' : '') + (node.isCode ? ' is-code' : '') + (node.isTable ? ' is-table' : '') + (displayStatus ? ` status-${displayStatus}` : '') + (isPrimarySel ? ' selected' : '') + (isSecondarySel ? ' selected-secondary' : '');
+    el.className = `mm-node level-${node.level}` + (node.isRoot ? ' root' : '') + (node.isCode ? ' is-code' : '') + (node.isTable ? ' is-table' : '') + (node.aggregateRoot ? ' aggregate-root' : '') + (node.aggregateDomain ? ' aggregate-domain' : '') + (node.aggregateSource ? ' aggregate-source' : '') + (node.aggregateContent ? ' aggregate-content' : '') + (displayStatus ? ` status-${displayStatus}` : '') + (isPrimarySel ? ' selected' : '') + (isSecondarySel ? ' selected-secondary' : '');
     el.dataset.id = node.id;
     el.style.left = node.x + 'px';
     el.style.top = node.y + 'px';
@@ -6936,7 +7505,16 @@ function renderMindmap(opts = {}) {
     // is read back by measureAndRelayout via offsetWidth.
     el.addEventListener('mousedown', e => {
       if (e.button !== 0) return;
-      if (e.target.closest('.action-btn') || e.target.closest('.collapse-toggle')) return;
+      if (e.target.closest('.action-btn') || e.target.closest('.collapse-toggle') || e.target.closest('.aggregate-open-source')) return;
+      if (state.aggregateMode) {
+        if (!node.aggregateContent) return;
+        const textEl = e.target.closest('.node-text');
+        if (textEl && textEl.getAttribute('contenteditable') === 'true') return;
+        selectNode(node.id);
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount) sel.removeAllRanges();
+        return;
+      }
       const inMermaid = !!e.target.closest('.mermaid-block');
       const textEl = e.target.closest('.node-text');
       if (textEl && textEl.getAttribute('contenteditable') === 'true') return;
@@ -6949,6 +7527,7 @@ function renderMindmap(opts = {}) {
     });
     el.addEventListener('dblclick', e => {
       if (e.target.closest('.action-btn') || e.target.closest('.collapse-toggle')) return;
+      if (state.aggregateMode && !node.aggregateContent) return;
       e.preventDefault();
       e.stopPropagation();
       selectNode(node.id);
@@ -6969,15 +7548,44 @@ function renderMindmap(opts = {}) {
     // Mermaid-language code blocks render as a live diagram with zoom support.
     const isMermaidNode = node.isCode && (node.lang || '').toLowerCase() === 'mermaid';
     if (isMermaidNode) el.classList.add('is-mermaid');
-    const innerText = isMermaidNode
-      ? `<div class="mermaid-block" data-mermaid-pending="1"><pre class="mermaid-source" hidden>${escHtml(node.text || '')}</pre><div class="mermaid-placeholder">Mermaid 渲染中…</div></div>`
-      : node.isCode
-        ? escHtml(node.text || '')
-        : (node.isTable ? renderNodeTable(node) : renderNodeRichText(node.text));
+    const sourcePath = node.sourcePath || '';
+    const sourceParts = sourcePath.split('/');
+    const sourceName = sourceParts.pop() || node.text || '';
+    const sourceDirectory = sourceParts.join('/') || '项目根目录';
+    const innerText = node.aggregateRoot
+      ? `<div class="aggregate-root-copy"><span>业务场景推断</span><small>待人工确认 · ${node.aggregateSectionCount} 个节点 · ${node.aggregateFileCount} 个文件</small></div>`
+      : node.aggregateDomain
+        ? `<span>${escHtml(node.text)}</span><span class="aggregate-domain-count">${node.aggregateFileCount} 个文件</span>`
+        : node.aggregateSource
+          ? `<div class="aggregate-source-copy"><span class="aggregate-source-name">${escHtml(sourceName)}</span><span class="aggregate-source-path">${escHtml(sourceDirectory)}</span><button class="aggregate-open-source" type="button" title="在原文件中打开" aria-label="打开来源文件 ${escHtml(sourceName)}" onclick="openAggregateSource('${escJs(sourcePath)}', ${Number(node.sourceLineIndex) || 0}, event)">↗</button></div>`
+          : isMermaidNode
+            ? `<div class="mermaid-block" data-mermaid-pending="1"><pre class="mermaid-source" hidden>${escHtml(node.text || '')}</pre><div class="mermaid-placeholder">Mermaid 渲染中…</div></div>`
+            : node.isCode
+              ? escHtml(node.text || '')
+              : (node.isTable ? renderNodeTable(node) : renderNodeRichText(node.text));
     const langBadge = node.isCode && node.lang
       ? `<span class="code-lang">${escHtml(node.lang)}</span>`
       : '';
-    const noteIndicator = node.note ? `<span class="node-note-dot" title="点击查看备注" onclick="openNoteEditor(${node.id}, event)">●</span>` : '';
+    const noteIndicator = !state.aggregateMode && node.note ? `<span class="node-note-dot" title="点击查看备注" onclick="openNoteEditor(${node.id}, event)">●</span>` : '';
+    const canAggregateAddChild = node.aggregateContent || node.aggregateSection
+      || (node.aggregateSource && (node.aggregateSections || []).length === 1);
+    const aggregateActions = node.aggregateContent ? `
+        <button class="action-btn note" title="编辑节点 (F2)" onclick="focusNodeText(${node.id})">${ICONS.edit}</button>
+        <span class="action-divider"></span>
+        <button class="action-btn add" title="新增子节点 (Tab)" onclick="addChildNode(${node.id})">${ICONS.plus}</button>
+      ` : (canAggregateAddChild ? `
+        <button class="action-btn add" title="新增内容节点" onclick="addChildNode(${node.id})">${ICONS.plus}</button>
+      ` : '');
+    const nodeActions = state.aggregateMode ? aggregateActions : `
+        <button class="action-btn pass" title="标记完成 (1)" onclick="setNodeStatus(${node.id},'pass')">${ICONS.check}</button>
+        <button class="action-btn fail" title="标记问题 (2)" onclick="setNodeStatus(${node.id},'fail')">${ICONS.x}</button>
+        <button class="action-btn pending" title="标记待处理 (3)" onclick="setNodeStatus(${node.id},'pending')">${ICONS.clock}</button>
+        ${displayStatus ? `<button class="action-btn clear" title="清除状态 (0)" onclick="setNodeStatus(${node.id},null)">${ICONS.clearStatus}</button>` : ''}
+        <button class="action-btn note" title="${node.note ? '编辑备注' : '添加备注'}" onclick="openNoteEditor(${node.id}, event)">${ICONS.note}</button>
+        <span class="action-divider"></span>
+        <button class="action-btn add" title="新增子节点" onclick="addChildNode(${node.id})">${ICONS.plus}</button>
+        ${node.isRoot ? '' : `<button class="action-btn del" title="删除节点" onclick="deleteNode(${node.id})">${ICONS.trash}</button>`}
+    `;
     el.innerHTML = `
       <div class="node-inner">
         ${badge}${langBadge}
@@ -6990,14 +7598,7 @@ function renderMindmap(opts = {}) {
         ${noteIndicator}
       </div>
       <div class="node-actions">
-        <button class="action-btn pass" title="标记完成 (1)" onclick="setNodeStatus(${node.id},'pass')">${ICONS.check}</button>
-        <button class="action-btn fail" title="标记问题 (2)" onclick="setNodeStatus(${node.id},'fail')">${ICONS.x}</button>
-        <button class="action-btn pending" title="标记待处理 (3)" onclick="setNodeStatus(${node.id},'pending')">${ICONS.clock}</button>
-        ${displayStatus ? `<button class="action-btn clear" title="清除状态 (0)" onclick="setNodeStatus(${node.id},null)">${ICONS.clearStatus}</button>` : ''}
-        <button class="action-btn note" title="${node.note ? '编辑备注' : '添加备注'}" onclick="openNoteEditor(${node.id}, event)">${ICONS.note}</button>
-        <span class="action-divider"></span>
-        <button class="action-btn add" title="新增子节点" onclick="addChildNode(${node.id})">${ICONS.plus}</button>
-        ${node.isRoot ? '' : `<button class="action-btn del" title="删除节点" onclick="deleteNode(${node.id})">${ICONS.trash}</button>`}
+        ${nodeActions}
       </div>
       ${collapseBtn}
     `;
@@ -7086,7 +7687,8 @@ function applyTransform() {
     updateCanvasVScroll();
     // Persist the settled viewport so a browser refresh restores it instead of
     // re-fitting to screen. Debounced naturally by the settle timer.
-    snapshotCurrentViewport();
+    if (state.aggregateMode) snapshotAggregateView();
+    else snapshotCurrentViewport();
     if (state.currentFile) persistBrowserProject();
   }, 180);
 }
@@ -7211,7 +7813,7 @@ function onNodeTextBlur(id, el) {
   if (!node.isCode) newText = newText.replace(/^\s+|\s+$/g, '');
   const oldText = node.isTable ? tableToMarkdown(node).trim() : node.text;
   if (newText !== oldText) {
-    pushHistory();
+    if (!state.aggregateMode) pushHistory();
     if (node.isTable) {
       const parsedTable = parseMarkdownTableText(newText);
       if (parsedTable) {
@@ -7236,7 +7838,12 @@ function onNodeTextBlur(id, el) {
       if (parsedFence) convertNodeToCode(node, parsedFence);
       else node.text = newText;
     }
-    syncToMarkdown();
+    if (state.aggregateMode) {
+      delete node.aggregatePlaceholder;
+      syncAggregateSourceToMarkdown(node.sourcePath);
+    } else {
+      syncToMarkdown();
+    }
     // re-layout because node height may have changed
     layoutTree(state.nodes);
     renderMindmap();
@@ -7264,8 +7871,8 @@ function getFile() {
   return state.currentFile ? state.files[state.currentFile] : null;
 }
 
-function pushHistory() {
-  const f = getFile();
+function pushHistoryForFile(path) {
+  const f = path ? state.files[path] : null;
   if (!f) return;
   // ensure structures exist (for legacy entries)
   if (!f.history) f.history = [];
@@ -7275,7 +7882,12 @@ function pushHistory() {
   f.history.push(f.content);
   if (f.history.length > MAX_HISTORY) f.history.shift();
   f.future.length = 0;
-  updateUndoButtons();
+  if (path === state.currentFile && !state.aggregateMode) updateUndoButtons();
+}
+
+function pushHistory() {
+  if (state.aggregateMode) return;
+  pushHistoryForFile(state.currentFile);
 }
 
 function applySnapshot(md) {
@@ -7565,6 +8177,8 @@ function finishNodeDrag() {
 }
 
 function focusNodeText(id) {
+  const node = findNodeById(id);
+  if (state.aggregateMode && (!node || !node.aggregateContent)) return;
   requestAnimationFrame(() => {
     const el = document.querySelector(`.node-text[data-id="${id}"]`);
     if (!el) return;
@@ -7576,6 +8190,44 @@ function addChildNode(id) {
   if (!requireEdit()) return;
   const node = findNodeById(id);
   if (!node) return;
+  if (state.aggregateMode) {
+    const canAdd = node.aggregateContent || node.aggregateSection
+      || (node.aggregateSource && (node.aggregateSections || []).length === 1);
+    if (!canAdd) return;
+    const section = node.aggregateSource ? node.aggregateSections[0] : null;
+    const parentSourceLevel = node.aggregateSource || node.aggregateSection
+      ? ((section?.level || node.sourceLevel || 3))
+      : (node.sourceLevel || node.level || 1);
+    const childIsBullet = node.aggregateSource || node.aggregateSection
+      || node.isBullet || node.isText || node.isTable || node.isCode || parentSourceLevel >= 6;
+    const newNode = {
+      id: nextId(),
+      level: (node.level || 3) + 1,
+      sourceLevel: childIsBullet ? parentSourceLevel + 1 : Math.min(6, parentSourceLevel + 1),
+      text: '新节点',
+      status: null,
+      children: [],
+      isBullet: childIsBullet,
+      aggregateContent: true,
+      sourcePath: node.sourcePath,
+      sourceLineIndex: node.sourceLineIndex,
+      sourceSectionIndex: node.sourceSectionIndex || 0,
+    };
+    if (node.aggregateSource) {
+      node.children = (node.children || []).filter(child => !child.aggregatePlaceholder);
+    } else if (node.aggregatePlaceholder) {
+      delete node.aggregatePlaceholder;
+    }
+    node.children.push(newNode);
+    node.collapsed = false;
+    state.selectedNodeId = newNode.id;
+    state.selectedNodeIds = new Set([newNode.id]);
+    syncAggregateSourceToMarkdown(newNode.sourcePath);
+    layoutTree(state.nodes);
+    renderMindmap();
+    focusNodeText(newNode.id);
+    return;
+  }
   pushHistory();
   // A child of a bullet/text/table node must itself be a bullet; a child of a
   // heading at depth < 6 is a heading, otherwise fall back to bullet so we
@@ -7606,6 +8258,33 @@ function addSiblingNode(id) {
   if (!node || node.isRoot) return;
   const info = findParentList(id);
   if (!info) return;
+  if (state.aggregateMode) {
+    if (!node.aggregateContent) return;
+    const newNode = {
+      id: nextId(),
+      level: node.level,
+      sourceLevel: node.sourceLevel || node.level,
+      text: '新节点',
+      status: null,
+      children: [],
+      isBullet: node.isBullet || node.isTable || node.isCode,
+      isText: node.isText,
+      aggregateContent: true,
+      sourcePath: node.sourcePath,
+      sourceLineIndex: node.sourceLineIndex,
+      sourceSectionIndex: node.sourceSectionIndex || 0,
+    };
+    const idx = info.list.findIndex(item => item.id === id);
+    if (node.aggregatePlaceholder) info.list.splice(idx, 1, newNode);
+    else info.list.splice(idx + 1, 0, newNode);
+    state.selectedNodeId = newNode.id;
+    state.selectedNodeIds = new Set([newNode.id]);
+    syncAggregateSourceToMarkdown(newNode.sourcePath);
+    layoutTree(state.nodes);
+    renderMindmap();
+    focusNodeText(newNode.id);
+    return;
+  }
   pushHistory();
   const newNode = {
     id: nextId(),
@@ -7683,6 +8362,7 @@ function applyStatusToNode(node, status) {
 }
 
 function setNodeStatus(id, status) {
+  if (state.aggregateMode) return;
   if (!requireEdit()) return;
   // If the triggered node is part of a multi-selection, apply to all selected.
   const ids = state.selectedNodeIds.has(id) && state.selectedNodeIds.size > 1
@@ -7872,7 +8552,144 @@ function rowCellsForEmit(row) {
   return row.text.split(' | ');
 }
 
+function findAggregateSourceNode(sourcePath) {
+  return flattenNodes(state.nodes).find(node => node.aggregateSource && node.sourcePath === sourcePath) || null;
+}
+
+function cloneAggregateNodeForMarkdown(node) {
+  if (!node || node.aggregatePlaceholder) return null;
+  const clone = {
+    ...node,
+    level: node.sourceLevel || node.level,
+    children: [],
+  };
+  for (const key of [
+    'aggregateContent', 'aggregateSource', 'aggregateSection', 'aggregatePlaceholder',
+    'sourcePath', 'sourceLineIndex', 'sourceSectionIndex', 'sourceLevel',
+    'x', 'y', 'w', 'h', '_filterHidden',
+  ]) delete clone[key];
+  clone.children = (node.children || []).map(cloneAggregateNodeForMarkdown).filter(Boolean);
+  if (Array.isArray(node.tableHeaders)) clone.tableHeaders = node.tableHeaders.slice();
+  if (Array.isArray(node.cells)) clone.cells = node.cells.slice();
+  if (Array.isArray(node.rows)) {
+    clone.rows = node.rows.map(row => ({ ...row, cells: Array.isArray(row.cells) ? row.cells.slice() : row.cells }));
+  }
+  return clone;
+}
+
+function findScenarioSectionRanges(md) {
+  const lines = String(md || '').replace(/\r\n?/g, '\n').split('\n');
+  const sections = [];
+  for (let i = 0; i < lines.length; i++) {
+    const heading = lines[i].match(/^(#{1,6})\s+(.*)$/);
+    if (!heading) continue;
+    const title = extractStatusText(heading[2]).text.replace(/\s+/g, ' ').trim();
+    if (!/^业务场景推断\s*[（(]\s*待人工确认\s*[）)]$/.test(title)) continue;
+    const level = heading[1].length;
+    let end = lines.length;
+    for (let j = i + 1; j < lines.length; j++) {
+      const nextHeading = lines[j].match(/^(#{1,6})\s+/);
+      if (nextHeading && nextHeading[1].length <= level) {
+        end = j;
+        break;
+      }
+    }
+    sections.push({ index: sections.length, start: i, end, level });
+  }
+  return { lines, sections };
+}
+
+function replaceScenarioSectionBody(md, range, body) {
+  const usesCrlf = /\r\n/.test(md);
+  const hadFinalNewline = /\r?\n$/.test(md);
+  const { lines } = findScenarioSectionRanges(md);
+  const cleanBody = String(body || '').replace(/^\n+|\n+$/g, '');
+  const replacement = [''];
+  if (cleanBody) {
+    replacement.push(...cleanBody.split('\n'));
+    if (range.end < lines.length) replacement.push('');
+  }
+  lines.splice(range.start + 1, range.end - range.start - 1, ...replacement);
+  let out = lines.join(usesCrlf ? '\r\n' : '\n');
+  if (hadFinalNewline && !/\r?\n$/.test(out)) out += usesCrlf ? '\r\n' : '\n';
+  return out;
+}
+
+function aggregateSectionChildren(sourceNode, sectionIndex) {
+  const sections = sourceNode.aggregateSections || [];
+  if (sections.length <= 1) return sourceNode.children || [];
+  const wrapper = (sourceNode.children || []).find(node => node.aggregateSection && node.sourceSectionIndex === sectionIndex);
+  return wrapper ? (wrapper.children || []) : [];
+}
+
+function refreshAggregateSourceSectionMetadata(sourceNode, md) {
+  const found = findScenarioSectionRanges(md).sections;
+  sourceNode.aggregateSections = found.map(section => ({
+    index: section.index, lineIndex: section.start, level: section.level,
+  }));
+  if (found[0]) {
+    sourceNode.sourceLineIndex = found[0].start;
+    sourceNode.lineIndex = found[0].start;
+  }
+  for (const node of sourceNode.children || []) {
+    if (!node.aggregateSection) continue;
+    const section = found[node.sourceSectionIndex];
+    if (section) {
+      node.sourceLineIndex = section.start;
+      node.lineIndex = section.start;
+    }
+  }
+}
+
+function syncAggregateSourceToMarkdown(sourcePath) {
+  if (!state.aggregateMode || !sourcePath) return false;
+  const file = state.files[sourcePath];
+  const sourceNode = findAggregateSourceNode(sourcePath);
+  if (!file || !sourceNode) return false;
+  const cachedSource = state.aggregateCache?.sources?.find(source => source.path === sourcePath);
+  if (cachedSource && cachedSource.content !== file.content) {
+    showSaveStatus('error', '来源文件已变化，请重新进入聚合页后再编辑');
+    return false;
+  }
+
+  const found = findScenarioSectionRanges(file.content);
+  if (!found.sections.length || found.sections.length !== (sourceNode.aggregateSections || []).length) {
+    showSaveStatus('error', '来源文件中未找到业务场景推断章节');
+    return false;
+  }
+
+  const updates = found.sections.map(section => {
+    const nodes = aggregateSectionChildren(sourceNode, section.index)
+      .map(cloneAggregateNodeForMarkdown)
+      .filter(Boolean);
+    return {
+      range: section,
+      body: nodesToMarkdown(nodes).replace(/^\n+|\n+$/g, ''),
+    };
+  }).sort((a, b) => b.range.start - a.range.start);
+
+  const previous = file.content;
+  let next = previous;
+  for (const update of updates) next = replaceScenarioSectionBody(next, update.range, update.body);
+  if (next === previous) return true;
+
+  pushHistoryForFile(sourcePath);
+  file.content = next;
+  markFileDirty(sourcePath);
+  refreshAggregateSourceSectionMetadata(sourceNode, next);
+  if (cachedSource) cachedSource.content = next;
+  snapshotAggregateView();
+  persistBrowserProject();
+  if (file.handle) showSaveStatus('saving', '正在回写来源…');
+  scheduleAutosave(sourcePath);
+  return true;
+}
+
 function syncToMarkdown() {
+  if (state.aggregateMode) {
+    const node = findNodeById(state.selectedNodeId);
+    return syncAggregateSourceToMarkdown(node?.sourcePath);
+  }
   const body = nodesToMarkdown(state.nodes).replace(/^\n+/, '');
   const frontMatter = state.currentFile && state.files[state.currentFile]
     ? String(state.files[state.currentFile].frontMatter || '').trimEnd()
@@ -7953,11 +8770,11 @@ function scheduleAutosave(path) {
   if (!f || !f.handle) {
     persistBrowserProject();
     // No writable handle — show the "需手动保存" hint and bail.
-    if (path === state.currentFile) showSaveStatus('unsaved');
+    if (path === state.currentFile || (state.aggregateMode && !!findAggregateSourceNode(path))) showSaveStatus('unsaved');
     return;
   }
   if (_autosaveTimers.has(path)) clearTimeout(_autosaveTimers.get(path));
-  if (path === state.currentFile) showSaveStatus('saving');
+  if (path === state.currentFile || (state.aggregateMode && !!findAggregateSourceNode(path))) showSaveStatus('saving', state.aggregateMode ? '正在回写来源…' : undefined);
   _autosaveTimers.set(path, setTimeout(() => writeFile(path), AUTOSAVE_DELAY));
 }
 
@@ -7984,10 +8801,10 @@ async function writeFile(path, _opts = {}) {
     } catch {}
     f.dirty = false;
     persistBrowserProject();
-    if (path === state.currentFile) showSaveStatus('saved');
+    if (path === state.currentFile || (state.aggregateMode && !!findAggregateSourceNode(path))) showSaveStatus('saved');
   } catch (err) {
     console.error('autosave failed', path, err);
-    if (path === state.currentFile) showSaveStatus('error', err.message || '保存失败');
+    if (path === state.currentFile || (state.aggregateMode && !!findAggregateSourceNode(path))) showSaveStatus('error', err.message || '保存失败');
   }
 }
 
@@ -8118,7 +8935,7 @@ async function checkExternalChanges() {
   _filePollBusy = true;
   try {
     const allPaths = Object.keys(state.files);
-    const current = state.currentFile;
+    const current = state.aggregateMode ? null : state.currentFile;
     const background = allPaths.filter(path => path !== current);
     const paths = current ? [current] : [];
     if (background.length) {
@@ -9557,8 +10374,7 @@ function clampLockedOffsetY(nextY) {
   return Math.max(minOffset, Math.min(maxOffset, nextY));
 }
 
-function panLockedCanvas(deltaY) {
-  if (!state.zoomLocked) return;
+function panCanvasVertically(deltaY) {
   state.offsetY = clampLockedOffsetY(state.offsetY - deltaY);
   applyTransform();
 }
@@ -9596,6 +10412,29 @@ function toggleZoomLock() {
   if (state.zoomLocked) state.offsetY = clampLockedOffsetY(state.offsetY);
   updateZoomLockUI();
   applyTransform();
+}
+
+function updateMindmapFocusModeUI() {
+  document.body.classList.toggle('mindmap-focus-mode', state.focusMode);
+  const button = document.getElementById('mindmap-focus-btn');
+  if (button) {
+    const label = state.focusMode ? '退出全屏导图' : '全屏展示导图';
+    button.title = label;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-pressed', state.focusMode ? 'true' : 'false');
+  }
+}
+
+function toggleMindmapFocusMode(force) {
+  state.focusMode = typeof force === 'boolean' ? force : !state.focusMode;
+  updateMindmapFocusModeUI();
+
+  // The layout changes, but the live scale/offset deliberately do not. This
+  // makes entering and leaving focus mode reversible without an auto-center.
+  requestAnimationFrame(() => {
+    syncCanvasSizeAfterLayout();
+    applyTransform();
+  });
 }
 
 function updateCanvasVScroll() {
@@ -9679,6 +10518,24 @@ window.addEventListener('keydown', e => {
   const isText = t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable || t.classList?.contains('node-text'));
   const mod = e.metaKey || e.ctrlKey;
 
+  // Escape leaves the distraction-free canvas unless a higher-priority
+  // viewer/dialog or an active text editor needs the key first.
+  const hasOpenOverlay = document.getElementById('img-lightbox')?.classList.contains('open')
+    || document.getElementById('mermaid-viewer')?.classList.contains('open')
+    || document.getElementById('confirm-dialog')?.style.display === 'flex';
+  if (state.focusMode && e.key === 'Escape' && !isText && !hasOpenOverlay) {
+    e.preventDefault();
+    toggleMindmapFocusMode(false);
+    return;
+  }
+
+  // Cmd/Ctrl+G → return to the cross-file aggregate from any source file.
+  if (mod && !e.shiftKey && !e.altKey && (e.key === 'g' || e.key === 'G')) {
+    e.preventDefault();
+    if (!state.aggregateMode) openScenarioAggregate();
+    return;
+  }
+
   // Block native Select-All on the canvas — only allow inside a text input.
   if (mod && !isText && (e.key === 'a' || e.key === 'A')) {
     e.preventDefault();
@@ -9694,6 +10551,21 @@ window.addEventListener('keydown', e => {
       if (input) { input.focus(); input.select(); }
       return;
     }
+  }
+
+  // Aggregate content nodes are source-aware: editing and insertion shortcuts
+  // write back to their own Markdown file. Destructive/status shortcuts stay
+  // disabled here so metadata branches cannot be mutated accidentally.
+  if (state.aggregateMode) {
+    if (isText) return;
+    if (!isText && mod && /^(z|y)$/i.test(e.key)) e.preventDefault();
+    const node = findNodeById(state.selectedNodeId);
+    if (e.key === 'Escape') { selectNode(null); return; }
+    if (!node || !node.aggregateContent || mod || e.shiftKey || e.altKey) return;
+    if (e.key === 'Tab') { e.preventDefault(); addChildNode(node.id); }
+    else if (e.key === 'Enter') { e.preventDefault(); addSiblingNode(node.id); }
+    else if (e.key === 'F2') { e.preventDefault(); focusNodeText(node.id); }
+    return;
   }
 
   // Undo / Redo (skip when typing — let native undo work)
@@ -9819,10 +10691,20 @@ window.addEventListener('mouseup', () => {
 wrap.addEventListener('wheel', e => {
   if (e.target.closest('.ai-chat')) return;
   e.preventDefault();
-  if (state.zoomLocked) {
-    panLockedCanvas(e.deltaY * LOCKED_WHEEL_PAN_SPEED);
+
+  // Keep the default wheel gesture scroll-like. Zoom is deliberately gated
+  // behind Cmd/Ctrl so a long mindmap can be browsed without its scale
+  // changing accidentally. A locked view always remains non-zoomable.
+  const wantsZoom = (e.metaKey || e.ctrlKey) && !state.zoomLocked;
+  if (!wantsZoom) {
+    const unit = e.deltaMode === WheelEvent.DOM_DELTA_LINE
+      ? 16
+      : (e.deltaMode === WheelEvent.DOM_DELTA_PAGE ? (wrap.clientHeight || 600) : 1);
+    panCanvasVertically(e.deltaY * unit * CANVAS_WHEEL_PAN_SPEED);
     return;
   }
+
+  if (!e.deltaY) return;
   const delta = e.deltaY > 0 ? -0.04 : 0.04;
   const rect = wrap.getBoundingClientRect();
   zoom(delta, e.clientX - rect.left, e.clientY - rect.top);
@@ -10726,7 +11608,8 @@ window.addEventListener('beforeunload', () => { try { snapshotCurrentViewport();
   <div class="tree-folder collapsed"><span class="chevron"></span></div>
   <div class="tree-children hidden"></div>
   <div class="collapse-toggle collapsed"></div>
-  <div class="mm-node root level-1 level-2 selected selected-secondary mm-filter-dim mm-filter-match status-pass status-fail status-pending is-table is-code is-mermaid dragging-node drag-target drop-before drop-after"><span class="node-status-badge"></span></div>
+  <div class="mm-node root level-1 level-2 selected selected-secondary mm-filter-dim mm-filter-match status-pass status-fail status-pending is-table is-code is-mermaid aggregate-root aggregate-domain aggregate-source aggregate-content dragging-node drag-target drop-before drop-after"><span class="node-status-badge"></span></div>
+  <div class="scenario-aggregate-button active"></div>
   <span class="tree-status-badge tsb-pass tsb-fail tsb-pending"></span>
   <div class="editor-body mode-preview mode-split"></div>
   <div class="editor-gutter-line current"></div>
@@ -10738,7 +11621,7 @@ window.addEventListener('beforeunload', () => { try { snapshotCurrentViewport();
   <div class="ai-feedback-msg"></div>
   <div class="ai-msg-copy copied"></div>
   <div class="ai-msg-feedback liked disliked"></div>
-  <details class="ai-tool-call"><div class="ai-tool-strip"><div class="ai-tool-chip"></div></div><span class="ai-tool-call-id"></span></details>
+  <details class="ai-tool-call"><span class="ai-tool-call-id"></span></details>
   <div class="ai-citations"><span class="ai-citations-label"></span><div class="ai-citation-item"></div></div>
   <div class="ai-attachment-chip"></div>
   <span class="ai-ctx-usage warn danger"></span>
@@ -10746,7 +11629,6 @@ window.addEventListener('beforeunload', () => { try { snapshotCurrentViewport();
   <div class="mermaid-viewer open"></div>
   <div class="mermaid-viewer-stage is-dragging"></div>
   <div class="mermaid-block is-rendered"><button class="mermaid-zoom-btn"></button></div>
-  <span class="icon-svg lg xl"></span>
   <div class="zoom-btn disabled"></div>
 </template>
 </body>
