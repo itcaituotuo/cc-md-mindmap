@@ -376,20 +376,6 @@
     background: var(--chrome-fill-hover);
     color: var(--ink);
   }
-  .btn.save {
-    background: transparent;
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  header .btn.save {
-    background: transparent;
-    color: var(--ink);
-  }
-  .btn.save:hover { background: var(--accent); color: var(--paper); }
-  header .btn.save:hover {
-    background: var(--chrome-fill-hover);
-    color: var(--ink);
-  }
   .file-name {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
@@ -847,8 +833,8 @@
     left: 8px;
     top: 60px;
     height: calc(100% - 68px);
-    width: 280px;
-    min-width: 160px;
+    width: 320px;
+    min-width: 180px;
     max-width: 600px;
     background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,255,255,0.72)), var(--chrome-sidebar-bg);
     border: 1px solid var(--chrome-border);
@@ -3653,9 +3639,6 @@
     <button class="btn" id="redo-btn" onclick="redo()" title="重做 (Ctrl/Cmd+Shift+Z)" style="display:none" disabled>
       <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.8 4L11 6.2 8.8 8.4M11 6.2H5.5a3 3 0 000 6H8"/></svg>
     </button>
-    <button class="btn save" id="save-btn" onclick="saveCurrentFile()" style="display:none">
-      <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="10" height="10" rx="1.2"/><path d="M4.5 2v3.5h5V2"/><rect x="5" y="7.5" width="4" height="4.5" rx=".6"/></svg>
-    </button>
     <button class="btn mark-nav-btn" id="mark-prev-btn" onclick="navigateMarkedNode(-1)" title="定位上一个已标识节点" style="display:none" disabled>
       <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.8 8.7L7 5.5l3.2 3.2"/></svg>
     </button>
@@ -3667,6 +3650,11 @@
         <svg class="icon-svg" viewBox="0 0 14 14" fill="currentColor" stroke="none"><circle cx="3" cy="7" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="11" cy="7" r="1.2"/></svg>
       </button>
       <div class="overflow-dropdown" id="overflow-dropdown" style="display:none">
+        <button class="overflow-dropdown-item" id="save-btn" onclick="saveCurrentFile(); closeOverflowMenu()" title="保存当前 Markdown 文件" style="display:none">
+          <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="10" height="10" rx="1.2"/><path d="M4.5 2v3.5h5V2"/><rect x="5" y="7.5" width="4" height="4.5" rx=".6"/></svg>
+          <span>保存当前文档</span>
+        </button>
+        <div class="overflow-divider"></div>
         <button class="overflow-dropdown-item" onclick="toggleReviewSummary(); closeOverflowMenu()" title="查看当前文件的审阅摘要">
           <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h8M3 7h8M3 11h5"/></svg>
           <span>查看审阅摘要</span>
