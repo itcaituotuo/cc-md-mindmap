@@ -710,6 +710,41 @@
   }
   .filter-bar:focus-within { border-color: var(--accent); }
   .filter-bar .filter-icon { width: 13px; height: 13px; color: var(--ink-muted); flex-shrink: 0; }
+  .filter-scope-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+    padding-right: 7px;
+    border-right: 1px solid var(--chrome-border);
+  }
+  .filter-scope-select {
+    width: 68px;
+    height: 22px;
+    padding: 0 16px 0 3px;
+    border: none;
+    outline: none;
+    appearance: none;
+    background: transparent;
+    color: var(--ink-2);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .filter-scope-wrap .icon-svg {
+    position: absolute;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
+  .filter-scope-select:hover { color: var(--ink); }
+  .filter-scope-select:focus-visible {
+    border-radius: 4px;
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
   .filter-input {
     border: none;
     outline: none;
@@ -809,6 +844,164 @@
     border-color: var(--accent);
   }
 
+  /* ── CROSS-FILE SEARCH RESULTS ── */
+  .cross-file-search-panel {
+    position: fixed;
+    z-index: 260;
+    display: none;
+    flex-direction: column;
+    width: min(620px, calc(100vw - 24px));
+    max-height: min(560px, calc(100vh - 76px));
+    overflow: hidden;
+    border: 1px solid var(--chrome-border);
+    border-radius: 12px;
+    background: var(--chrome-bg);
+    box-shadow: 0 18px 48px rgba(34, 28, 19, 0.18), 0 3px 10px rgba(34, 28, 19, 0.08);
+    pointer-events: auto;
+  }
+  .cross-file-search-panel.open { display: flex; }
+  .cross-file-search-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 42px;
+    padding: 0 14px;
+    border-bottom: 1px solid var(--chrome-border);
+    background: var(--chrome-fill);
+  }
+  .cross-file-search-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 650;
+    white-space: nowrap;
+  }
+  .cross-file-search-title .icon-svg { width: 13px; height: 13px; color: var(--accent-deep); }
+  .cross-file-search-meta {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cross-file-search-list {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6px;
+  }
+  .cross-file-search-item {
+    display: block;
+    width: 100%;
+    padding: 10px 11px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+  }
+  .cross-file-search-item:hover,
+  .cross-file-search-item.active {
+    border-color: var(--chrome-border);
+    background: var(--chrome-fill-hover);
+  }
+  .cross-file-search-item.active {
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+  .cross-file-search-source {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .cross-file-search-source .icon-svg {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 auto;
+    color: var(--ink-muted);
+  }
+  .cross-file-search-source-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cross-file-search-line {
+    flex: 0 0 auto;
+    color: var(--ink-muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 500;
+  }
+  .cross-file-search-path {
+    display: block;
+    margin-top: 3px;
+    overflow: hidden;
+    color: var(--ink-muted);
+    font-size: 10.5px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cross-file-search-snippet {
+    display: block;
+    margin-top: 5px;
+    overflow: hidden;
+    color: var(--ink-2);
+    font-size: 11.5px;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cross-file-search-item mark {
+    padding: 0 1px;
+    border-radius: 2px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    font-weight: 700;
+  }
+  .cross-file-search-empty {
+    padding: 34px 18px;
+    color: var(--ink-muted);
+    font-size: 12px;
+    line-height: 1.7;
+    text-align: center;
+  }
+  .cross-file-search-footer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 34px;
+    padding: 0 14px;
+    border-top: 1px solid var(--chrome-border);
+    color: var(--ink-muted);
+    font-size: 10px;
+  }
+  .cross-file-search-footer kbd {
+    margin-right: 4px;
+    padding: 1px 5px;
+    border: 1px solid var(--chrome-border);
+    border-bottom-color: var(--chrome-border-hover);
+    border-radius: 4px;
+    background: var(--chrome-fill);
+    color: var(--ink-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    box-shadow: 0 1px 0 var(--chrome-border);
+  }
+
   /* dimmed/matched nodes when filter is active */
   .mm-node.mm-filter-dim {
     opacity: 0.22;
@@ -817,6 +1010,13 @@
   }
   .mm-node.mm-filter-match {
     box-shadow: 0 0 0 2px var(--accent), 0 4px 14px rgba(217, 121, 62, 0.18);
+  }
+  .mm-node.mm-search-jump {
+    animation: search-jump-pulse 0.75s ease-out 2;
+  }
+  @keyframes search-jump-pulse {
+    0%, 100% { box-shadow: none; }
+    45% { box-shadow: 0 0 0 5px var(--accent-soft), 0 0 0 2px var(--accent); }
   }
 
   /* ── MAIN LAYOUT ── */
@@ -3683,11 +3883,19 @@
       <span class="auth-username"></span>
       <button class="auth-logout-btn" onclick="authLogout()" title="退出登录">退出</button>
     </div>
-    <div class="filter-bar" id="filter-bar" style="display:none" title="搜索节点（关键词大小写不敏感）">
+    <div class="filter-bar" id="filter-bar" style="display:none" title="可搜索当前脑图或全部 Markdown 文件">
     <svg class="filter-icon icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3.5"/><path d="M8.6 8.6L11.5 11.5"/></svg>
-    <input type="search" id="filter-input" class="filter-input" aria-label="搜索节点" placeholder="搜索节点…" autocomplete="off" spellcheck="false"
+    <label class="filter-scope-wrap" title="选择搜索范围">
+      <select id="filter-scope" class="filter-scope-select" aria-label="搜索范围" onchange="onSearchScopeChange(this.value)">
+        <option value="current">当前脑图</option>
+        <option value="all">全部文件</option>
+      </select>
+      <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5l3 3 3-3"/></svg>
+    </label>
+    <input type="search" id="filter-input" class="filter-input" role="combobox" aria-autocomplete="list" aria-label="搜索当前脑图" aria-controls="cross-file-search-panel" aria-expanded="false" placeholder="搜索当前脑图…" autocomplete="off" spellcheck="false"
       oninput="onFilterInput(this.value)"
-      onkeydown="onFilterKey(event)">
+      onkeydown="onFilterKey(event)"
+      onfocus="onFilterFocus()">
     <div class="filter-chips" role="group" aria-label="按状态筛选">
       <button class="filter-chip chip-pass" data-status="pass" title="只显示完成" onclick="toggleFilterStatus('pass')">
         <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.3L5.8 10 11 4.5"/></svg>
@@ -3725,6 +3933,22 @@
     </button>
   </div>
 </header>
+
+<div class="cross-file-search-panel" id="cross-file-search-panel" role="dialog" aria-label="跨文件搜索结果">
+  <div class="cross-file-search-header">
+    <div class="cross-file-search-title">
+      <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.8" cy="5.8" r="3.5"/><path d="M8.5 8.5l3 3M2 12h4"/></svg>
+      <span>跨文件搜索</span>
+    </div>
+    <div class="cross-file-search-meta" id="cross-file-search-meta" aria-live="polite"></div>
+  </div>
+  <div class="cross-file-search-list" id="cross-file-search-list" role="listbox"></div>
+  <div class="cross-file-search-footer">
+    <span><kbd>↑↓</kbd>选择</span>
+    <span><kbd>Enter</kbd>打开并定位</span>
+    <span><kbd>Esc</kbd>关闭</span>
+  </div>
+</div>
 
 <button id="sidebar-toggle-btn" onclick="toggleSidebar()" title="收起侧栏" aria-label="收起侧栏">
   <svg class="icon-svg" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2" width="11" height="10" rx="1.5"/><line x1="5.5" y1="2" x2="5.5" y2="12"/></svg>
@@ -3970,6 +4194,18 @@ const state = {
     matches: [],           // matched node ids in tree order
     visible: new Set(),    // ids of matches + their ancestors
     cursor: -1,            // index into matches for prev/next nav
+  },
+  searchScope: 'current', // 'current' | 'all'
+  crossFileSearch: {
+    query: '',
+    results: [],
+    cursor: -1,
+    token: 0,
+    loading: false,
+    scanned: 0,
+    total: 0,
+    matchCount: 0,
+    cache: new Map(),
   },
 };
 const MAX_HISTORY = 100;
@@ -5135,6 +5371,32 @@ function normalizeProjectPath(path) {
     .trim();
 }
 
+// Folder APIs expose the selected directory in different ways. The File
+// System Access API gives us a directory handle/name, while the compatibility
+// input and legacy drag/drop paths only expose `root/child/file.md`. Infer the
+// shared first segment so every import path records the same project root.
+function inferProjectRootPathFromPaths(paths) {
+  const roots = new Set();
+  let found = false;
+  for (const rawPath of Array.from(paths || [])) {
+    const parts = normalizeProjectPath(rawPath).split('/').filter(Boolean);
+    if (parts.length < 2) return null;
+    roots.add(parts[0]);
+    found = true;
+    if (roots.size > 1) return null;
+  }
+  return found ? roots.values().next().value : null;
+}
+
+function ensureProjectRootPathFromPaths(paths) {
+  if (normalizeProjectPath(state.projectRootPath)) return state.projectRootPath;
+  const inferred = inferProjectRootPathFromPaths(paths);
+  if (!inferred) return null;
+  state.projectRootPath = inferred;
+  addFolderPath(inferred);
+  return inferred;
+}
+
 function parentFolderOf(path) {
   const clean = normalizeProjectPath(path);
   const idx = clean.lastIndexOf('/');
@@ -5697,6 +5959,7 @@ function restoreBrowserProject() {
   }
   const paths = Object.keys(state.files);
   if (!paths.length && !state.folders.size) return false;
+  ensureProjectRootPathFromPaths(paths);
   state.currentFile = data.currentFile && state.files[data.currentFile] ? data.currentFile : null;
   return true;
 }
@@ -5730,6 +5993,8 @@ async function loadFiles(files, importOptions = {}) {
 }
 
 async function loadFolderFiles(files) {
+  if (!requireEdit()) return;
+  ensureProjectRootPathFromPaths(Array.from(files || []).map(file => file.webkitRelativePath || '').filter(Boolean));
   return loadFiles(files, {
     looseDedupe: false,
     mergeRootByBasename: true,
@@ -5865,6 +6130,7 @@ async function handleUploadDrop(e) {
       const entry = item.webkitGetAsEntry?.();
       if (entry) await walkDroppedEntry(entry, '', collected);
     }
+    ensureProjectRootPathFromPaths(collected.map(item => item.path));
     let firstPath = null;
     for (const { file, path } of collected) {
       if (!isMarkdownPath(path)) continue;
@@ -5936,6 +6202,7 @@ function resetFilterStateForView() {
   f.cursor = -1;
   const input = document.getElementById('filter-input');
   if (input) input.value = '';
+  resetCrossFileSearch();
   updateFilterCountUI();
 }
 
@@ -5997,7 +6264,8 @@ function isScenarioInferenceHeading(node) {
 
 function aggregatePathParts(path) {
   const parts = normalizeProjectPath(path).split('/').filter(Boolean);
-  const rootName = normalizeProjectPath(state.projectRootPath).split('/').filter(Boolean).pop();
+  const inferredRoot = inferProjectRootPathFromPaths(Object.keys(state.files));
+  const rootName = normalizeProjectPath(state.projectRootPath || inferredRoot).split('/').filter(Boolean).pop();
   if (rootName && parts[0] === rootName) parts.shift();
   return parts;
 }
@@ -6148,8 +6416,10 @@ async function openScenarioAggregate() {
   state.selectedNodeIds.clear();
   state.markNavNodeId = null;
   state.editorSyncNodeId = null;
-  if (cached) restoreAggregateFilterState(cached.filter);
-  else resetFilterStateForView();
+  if (cached) {
+    resetCrossFileSearch();
+    restoreAggregateFilterState(cached.filter);
+  } else resetFilterStateForView();
   state.nodes = cached ? cached.nodes : [];
   if (cached) {
     const maxCachedId = flattenNodes(state.nodes).reduce((max, node) => Math.max(max, Number(node.id) || 0), 0);
@@ -9753,6 +10023,422 @@ function navigateMarkedNode(direction) {
 // ══════════════════════════════════════════════
 //  SEARCH / FILTER
 // ══════════════════════════════════════════════
+const CROSS_FILE_SEARCH_MAX_RESULTS = 120;
+const CROSS_FILE_SEARCH_BATCH_SIZE = 24;
+let _crossFileSearchTimer = null;
+
+function cleanCrossFileSearchText(raw) {
+  let text = String(raw || '')
+    .replace(/^\s{0,3}#{1,6}\s+/, '')
+    .replace(/^\s*(?:[-+*]|\d+[.)])\s+/, '')
+    .replace(/^\s*>+\s?/, '')
+    .replace(/^\s*\|?|\|?\s*$/g, '')
+    .replace(/<!--.*?-->/g, '')
+    .replace(/<[^>]+>/g, ' ')
+    .trim();
+  text = extractStatusText(text).text;
+  return stripInlineMd(text).replace(/\s*\|\s*/g, ' · ').trim();
+}
+
+function buildCrossFileSearchIndex(path, content) {
+  const lines = String(content || '').replace(/\r\n?/g, '\n').split('\n');
+  const records = [];
+  const headingStack = [];
+  const bulletStack = [];
+  let inFence = false;
+  let fenceMarker = '';
+  let inFrontMatter = lines[0]?.trim() === '---';
+
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const trimmed = raw.trim();
+    if (inFrontMatter) {
+      if (i > 0 && trimmed === '---') inFrontMatter = false;
+      continue;
+    }
+
+    const fence = raw.match(/^\s*(`{3,}|~{3,})/);
+    if (fence) {
+      if (!inFence) {
+        inFence = true;
+        fenceMarker = fence[1][0];
+      } else if (fence[1][0] === fenceMarker) {
+        inFence = false;
+        fenceMarker = '';
+      }
+      continue;
+    }
+
+    if (!inFence) {
+      const heading = raw.match(/^\s{0,3}(#{1,6})\s+(.+?)\s*#*\s*$/);
+      if (heading) {
+        const level = heading[1].length;
+        const text = cleanCrossFileSearchText(heading[2]);
+        headingStack.length = level - 1;
+        headingStack[level - 1] = text;
+        bulletStack.length = 0;
+        if (text) {
+          records.push({
+            kind: 'heading',
+            lineIndex: i,
+            text,
+            breadcrumb: headingStack.filter(Boolean).slice(),
+          });
+        }
+        continue;
+      }
+
+      const bullet = raw.match(/^(\s*)(?:[-+*]|\d+[.)])\s+(.+)$/);
+      if (bullet) {
+        const indent = leadingIndentWidth(bullet[1]);
+        while (bulletStack.length && bulletStack[bulletStack.length - 1].indent >= indent) bulletStack.pop();
+        const text = cleanCrossFileSearchText(bullet[2]);
+        const parents = bulletStack.map(item => item.text).filter(Boolean);
+        const breadcrumb = headingStack.filter(Boolean).concat(parents, text ? [text] : []);
+        if (text) records.push({ kind: 'bullet', lineIndex: i, text, breadcrumb });
+        bulletStack.push({ indent, text });
+        continue;
+      }
+    }
+
+    if (!trimmed || /^\s*(?:-{3,}|\*{3,}|_{3,})\s*$/.test(raw) || /^\s*\|?\s*:?-{3,}/.test(raw)) continue;
+    if (!inFence) bulletStack.length = 0;
+    const text = cleanCrossFileSearchText(raw);
+    if (!text) continue;
+    records.push({
+      kind: inFence ? 'code' : 'body',
+      lineIndex: i,
+      text,
+      breadcrumb: headingStack.filter(Boolean).concat(inFence ? bulletStack.map(item => item.text).filter(Boolean) : []),
+    });
+  }
+
+  return { path, content, records };
+}
+
+function getCrossFileSearchIndex(path) {
+  const search = state.crossFileSearch;
+  const file = state.files[path];
+  if (!file || !isFileLoaded(file)) return null;
+  const cached = search.cache.get(path);
+  if (cached && cached.content === file.content) return cached;
+  const index = buildCrossFileSearchIndex(path, file.content);
+  search.cache.set(path, index);
+  return index;
+}
+
+function crossFileSearchScore(text, query, kind, path) {
+  const value = String(text || '').toLocaleLowerCase();
+  const q = query.toLocaleLowerCase();
+  let score = kind === 'heading' ? 20 : kind === 'bullet' ? 28 : kind === 'file' ? 36 : 52;
+  if (value === q) score -= 18;
+  else if (value.startsWith(q)) score -= 10;
+  const hitAt = value.indexOf(q);
+  if (hitAt > 0) score += Math.min(10, hitAt / 12);
+  if (path === state.currentFile) score -= 2;
+  return score;
+}
+
+function searchCrossFileIndex(index, query) {
+  const q = query.toLocaleLowerCase();
+  const results = [];
+  const pathLower = index.path.toLocaleLowerCase();
+  if (pathLower.includes(q)) {
+    results.push({
+      path: index.path,
+      lineIndex: 0,
+      kind: 'file',
+      breadcrumb: ['文件名'],
+      snippet: index.path,
+      score: crossFileSearchScore(index.path, query, 'file', index.path),
+    });
+  }
+  for (const record of index.records) {
+    if (!record.text.toLocaleLowerCase().includes(q)) continue;
+    results.push({
+      path: index.path,
+      lineIndex: record.lineIndex,
+      kind: record.kind,
+      breadcrumb: record.breadcrumb,
+      snippet: record.text,
+      score: crossFileSearchScore(record.text, query, record.kind, index.path),
+    });
+    if (results.length >= 20) break;
+  }
+  return results;
+}
+
+function sortCrossFileSearchResults(results) {
+  results.sort((a, b) =>
+    a.score - b.score ||
+    a.path.localeCompare(b.path, 'zh-CN') ||
+    a.lineIndex - b.lineIndex
+  );
+}
+
+function clipCrossFileSearchSnippet(text, query, maxLength = 150) {
+  const value = String(text || '').replace(/\s+/g, ' ').trim();
+  if (value.length <= maxLength) return value;
+  const hit = value.toLocaleLowerCase().indexOf(query.toLocaleLowerCase());
+  const start = Math.max(0, Math.min(value.length - maxLength, hit - Math.floor(maxLength * 0.35)));
+  const end = Math.min(value.length, start + maxLength);
+  return `${start > 0 ? '…' : ''}${value.slice(start, end)}${end < value.length ? '…' : ''}`;
+}
+
+function highlightCrossFileSearchText(text, query) {
+  const value = String(text || '');
+  const q = String(query || '');
+  if (!q) return escHtml(value);
+  const lower = value.toLocaleLowerCase();
+  const needle = q.toLocaleLowerCase();
+  let html = '';
+  let cursor = 0;
+  while (cursor < value.length) {
+    const hit = lower.indexOf(needle, cursor);
+    if (hit < 0) {
+      html += escHtml(value.slice(cursor));
+      break;
+    }
+    html += escHtml(value.slice(cursor, hit));
+    html += `<mark>${escHtml(value.slice(hit, hit + q.length))}</mark>`;
+    cursor = hit + q.length;
+  }
+  return html;
+}
+
+function positionCrossFileSearchPanel() {
+  const panel = document.getElementById('cross-file-search-panel');
+  const bar = document.getElementById('filter-bar');
+  if (!panel?.classList.contains('open') || !bar) return;
+  const rect = bar.getBoundingClientRect();
+  const width = panel.offsetWidth || Math.min(620, window.innerWidth - 24);
+  const left = Math.max(8, Math.min(window.innerWidth - width - 8, rect.left + rect.width / 2 - width / 2));
+  panel.style.left = `${left}px`;
+  panel.style.top = `${Math.min(window.innerHeight - 48, rect.bottom + 8)}px`;
+}
+
+function openCrossFileSearchPanel() {
+  const panel = document.getElementById('cross-file-search-panel');
+  const input = document.getElementById('filter-input');
+  if (!panel || !state.crossFileSearch.query.trim()) return;
+  panel.classList.add('open');
+  if (input) input.setAttribute('aria-expanded', 'true');
+  positionCrossFileSearchPanel();
+}
+
+function closeCrossFileSearchPanel() {
+  const panel = document.getElementById('cross-file-search-panel');
+  const input = document.getElementById('filter-input');
+  panel?.classList.remove('open');
+  if (input) {
+    input.setAttribute('aria-expanded', 'false');
+    input.removeAttribute('aria-activedescendant');
+  }
+}
+
+function resetCrossFileSearch(cancel = true) {
+  clearTimeout(_crossFileSearchTimer);
+  const search = state.crossFileSearch;
+  if (cancel) search.token++;
+  search.query = '';
+  search.results = [];
+  search.cursor = -1;
+  search.loading = false;
+  search.scanned = 0;
+  search.total = 0;
+  search.matchCount = 0;
+  closeCrossFileSearchPanel();
+  const list = document.getElementById('cross-file-search-list');
+  const meta = document.getElementById('cross-file-search-meta');
+  if (list) list.innerHTML = '';
+  if (meta) meta.textContent = '';
+}
+
+function renderCrossFileSearchPanel() {
+  const search = state.crossFileSearch;
+  const list = document.getElementById('cross-file-search-list');
+  const meta = document.getElementById('cross-file-search-meta');
+  const input = document.getElementById('filter-input');
+  if (!list || !meta || !search.query.trim()) return;
+  openCrossFileSearchPanel();
+  const shown = search.results.length;
+  const countText = search.matchCount > shown ? `${shown}+` : String(search.matchCount);
+  meta.textContent = search.loading
+    ? `检索 ${search.scanned}/${search.total} · ${countText} 个结果`
+    : `${search.total} 个文件 · ${countText} 个结果`;
+
+  if (!shown) {
+    list.innerHTML = `<div class="cross-file-search-empty">${search.loading ? '正在读取并检索 Markdown 文件…' : '没有找到匹配内容<br>可尝试缩短关键词或更换搜索词'}</div>`;
+    if (input) input.removeAttribute('aria-activedescendant');
+    return;
+  }
+
+  const query = search.query;
+  list.innerHTML = search.results.map((result, index) => {
+    const fileName = basenameOfProjectPath(result.path);
+    const breadcrumb = (result.breadcrumb || []).filter(Boolean).join(' › ') || '文件内容';
+    const pathText = `${result.path} · ${breadcrumb}`;
+    const snippet = clipCrossFileSearchSnippet(result.snippet, query);
+    return `<button class="cross-file-search-item${index === search.cursor ? ' active' : ''}" id="cross-file-search-result-${index}" type="button" role="option" aria-selected="${index === search.cursor}" onclick="openCrossFileSearchResult(${index})" onmouseenter="selectCrossFileSearchResult(${index}, false)">
+      <span class="cross-file-search-source">${ICONS.file}<span class="cross-file-search-source-name">${highlightCrossFileSearchText(fileName, query)}</span><span class="cross-file-search-line">L${result.lineIndex + 1}</span></span>
+      <span class="cross-file-search-path">${highlightCrossFileSearchText(pathText, query)}</span>
+      <span class="cross-file-search-snippet">${highlightCrossFileSearchText(snippet, query)}</span>
+    </button>`;
+  }).join('');
+  if (search.cursor < 0) search.cursor = 0;
+  if (input) input.setAttribute('aria-activedescendant', `cross-file-search-result-${search.cursor}`);
+  positionCrossFileSearchPanel();
+}
+
+function selectCrossFileSearchResult(index, scroll = true) {
+  const search = state.crossFileSearch;
+  if (!search.results.length) return;
+  search.cursor = (index + search.results.length) % search.results.length;
+  const items = document.querySelectorAll('.cross-file-search-item');
+  items.forEach((item, itemIndex) => {
+    const active = itemIndex === search.cursor;
+    item.classList.toggle('active', active);
+    item.setAttribute('aria-selected', String(active));
+  });
+  const active = document.getElementById(`cross-file-search-result-${search.cursor}`);
+  if (scroll) active?.scrollIntoView({ block: 'nearest' });
+  document.getElementById('filter-input')?.setAttribute('aria-activedescendant', `cross-file-search-result-${search.cursor}`);
+}
+
+function moveCrossFileSearchCursor(direction) {
+  const search = state.crossFileSearch;
+  if (!search.results.length) return false;
+  const current = search.cursor < 0 ? 0 : search.cursor;
+  selectCrossFileSearchResult(current + (direction < 0 ? -1 : 1));
+  return true;
+}
+
+async function openCrossFileSearchResult(index = state.crossFileSearch.cursor) {
+  const result = state.crossFileSearch.results[index];
+  if (!result || !state.files[result.path]) return;
+  state.crossFileSearch.token++;
+  closeCrossFileSearchPanel();
+  await openFile(result.path);
+  if (state.currentFile !== result.path || state.aggregateMode) return;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    focusNodeForLine(result.lineIndex, true);
+    requestAnimationFrame(() => {
+      const node = findBestNodeForLine(result.lineIndex);
+      const el = node && document.querySelector(`.mm-node[data-id="${node.id}"]`);
+      if (!el) return;
+      el.classList.add('mm-search-jump');
+      setTimeout(() => el.classList.remove('mm-search-jump'), 1500);
+    });
+  }));
+}
+
+async function runCrossFileSearch(query) {
+  const cleanQuery = String(query || '').trim();
+  if (!cleanQuery) {
+    resetCrossFileSearch();
+    return;
+  }
+  const search = state.crossFileSearch;
+  const token = ++search.token;
+  const paths = Object.keys(state.files).filter(isMarkdownPath).sort((a, b) => a.localeCompare(b, 'zh-CN'));
+  search.query = cleanQuery;
+  search.results = [];
+  search.cursor = -1;
+  search.loading = true;
+  search.scanned = 0;
+  search.total = paths.length;
+  search.matchCount = 0;
+  renderCrossFileSearchPanel();
+
+  const allResults = [];
+  for (let start = 0; start < paths.length; start += CROSS_FILE_SEARCH_BATCH_SIZE) {
+    const batch = paths.slice(start, start + CROSS_FILE_SEARCH_BATCH_SIZE);
+    await Promise.all(batch.map(path => readFileEntry(path, { silent: true })));
+    if (token !== search.token || cleanQuery !== search.query) return;
+    for (const path of batch) {
+      const index = getCrossFileSearchIndex(path);
+      if (!index) continue;
+      allResults.push(...searchCrossFileIndex(index, cleanQuery));
+    }
+    sortCrossFileSearchResults(allResults);
+    search.matchCount = allResults.length;
+    search.results = allResults.slice(0, CROSS_FILE_SEARCH_MAX_RESULTS);
+    if (search.cursor < 0 && search.results.length) search.cursor = 0;
+    search.scanned = Math.min(paths.length, start + batch.length);
+    renderCrossFileSearchPanel();
+    await yieldToBrowser();
+  }
+
+  if (token !== search.token || cleanQuery !== search.query) return;
+  search.loading = false;
+  search.scanned = paths.length;
+  renderCrossFileSearchPanel();
+}
+
+function scheduleCrossFileSearch(query) {
+  clearTimeout(_crossFileSearchTimer);
+  const cleanQuery = String(query || '').trim();
+  if (!cleanQuery) {
+    resetCrossFileSearch();
+    return;
+  }
+  const search = state.crossFileSearch;
+  search.query = cleanQuery;
+  search.results = [];
+  search.cursor = -1;
+  search.loading = true;
+  search.scanned = 0;
+  search.total = Object.keys(state.files).filter(isMarkdownPath).length;
+  search.matchCount = 0;
+  renderCrossFileSearchPanel();
+  _crossFileSearchTimer = setTimeout(() => runCrossFileSearch(cleanQuery), 180);
+}
+
+function isGlobalSearchScope() {
+  return state.searchScope === 'all';
+}
+
+function updateSearchScopeUI() {
+  const global = isGlobalSearchScope();
+  const scope = document.getElementById('filter-scope');
+  const input = document.getElementById('filter-input');
+  if (scope && scope.value !== state.searchScope) scope.value = state.searchScope;
+  if (input) {
+    input.placeholder = global ? '搜索全部文件…' : '搜索当前脑图…';
+    input.setAttribute('aria-label', global ? '搜索全部文件' : '搜索当前脑图');
+  }
+}
+
+function setSearchScope(scope, { focus = false } = {}) {
+  const next = scope === 'all' ? 'all' : 'current';
+  state.searchScope = next;
+  updateSearchScopeUI();
+  const input = document.getElementById('filter-input');
+  const query = state.filter.keyword.trim();
+  if (next === 'all' && query) scheduleCrossFileSearch(query);
+  else if (next === 'current') resetCrossFileSearch();
+  if (focus && input) {
+    input.focus();
+    input.select();
+  }
+}
+
+function onSearchScopeChange(scope) {
+  setSearchScope(scope, { focus: true });
+}
+
+function onFilterFocus() {
+  if (!isGlobalSearchScope()) return;
+  const query = state.filter.keyword.trim();
+  if (!query) return;
+  if (state.crossFileSearch.query !== query || (!state.crossFileSearch.loading && !state.crossFileSearch.results.length)) {
+    scheduleCrossFileSearch(query);
+  } else {
+    renderCrossFileSearchPanel();
+  }
+  requestAnimationFrame(positionCrossFileSearchPanel);
+}
+
 function isFilterActive() {
   const f = state.filter;
   return !!(f && (f.keyword || f.statuses.size > 0 || f.reviewMode));
@@ -9895,15 +10581,24 @@ function onFilterInput(value) {
   state.filter.keyword = value || '';
   state.filter.cursor = -1;
   recomputeFilter();
+  if (isGlobalSearchScope()) scheduleCrossFileSearch(value);
+  else resetCrossFileSearch();
 }
 
 function onFilterKey(e) {
   if (e.key === 'Escape') {
     e.preventDefault();
-    clearFilter();
+    if (isGlobalSearchScope() && document.getElementById('cross-file-search-panel')?.classList.contains('open')) closeCrossFileSearchPanel();
+    else clearFilter();
+  } else if (isGlobalSearchScope() && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) {
+    if (moveCrossFileSearchCursor(e.key === 'ArrowUp' ? -1 : 1)) e.preventDefault();
   } else if (e.key === 'Enter') {
     e.preventDefault();
-    navigateFilterMatch(e.shiftKey ? -1 : 1);
+    if (isGlobalSearchScope() && state.crossFileSearch.results.length && document.getElementById('cross-file-search-panel')?.classList.contains('open')) {
+      openCrossFileSearchResult();
+    } else {
+      navigateFilterMatch(e.shiftKey ? -1 : 1);
+    }
   }
 }
 
@@ -9925,6 +10620,7 @@ function clearFilter() {
   f.cursor = -1;
   const input = document.getElementById('filter-input');
   if (input) input.value = '';
+  resetCrossFileSearch();
   for (const n of flattenNodes(state.nodes)) n._filterHidden = false;
   updateFilterCountUI();
   layoutTree(state.nodes);
@@ -9951,6 +10647,8 @@ function setFilterBarVisible(visible) {
   const bar = document.getElementById('filter-bar');
   if (!bar) return;
   bar.style.display = visible ? '' : 'none';
+  if (visible) updateSearchScopeUI();
+  else closeCrossFileSearchPanel();
 }
 
 function focusNodeForLine(line, force = false) {
@@ -10530,13 +11228,12 @@ window.addEventListener('keydown', e => {
     return;
   }
 
-  // Cmd/Ctrl+F → focus the filter search input (only when filter bar is visible)
-  if (mod && (e.key === 'f' || e.key === 'F')) {
+  // Cmd/Ctrl+F searches the current mindmap; Cmd/Ctrl+Shift+F searches all files.
+  if (mod && !e.altKey && (e.key === 'f' || e.key === 'F')) {
     const bar = document.getElementById('filter-bar');
     if (bar && bar.style.display !== 'none') {
       e.preventDefault();
-      const input = document.getElementById('filter-input');
-      if (input) { input.focus(); input.select(); }
+      setSearchScope(e.shiftKey ? 'all' : 'current', { focus: true });
       return;
     }
   }
@@ -10599,6 +11296,7 @@ window.addEventListener('keydown', e => {
 });
 
 window.addEventListener('resize', () => {
+  positionCrossFileSearchPanel();
   const wrap = document.getElementById('canvas-wrap');
   const svg = document.getElementById('connector-svg');
   svg.setAttribute('width', wrap.clientWidth);
@@ -10609,6 +11307,13 @@ window.addEventListener('resize', () => {
   } else {
     updateCanvasVScroll();
   }
+});
+
+document.addEventListener('mousedown', e => {
+  const panel = document.getElementById('cross-file-search-panel');
+  if (!panel?.classList.contains('open')) return;
+  if (panel.contains(e.target) || document.getElementById('filter-bar')?.contains(e.target)) return;
+  closeCrossFileSearchPanel();
 });
 
 // pan
